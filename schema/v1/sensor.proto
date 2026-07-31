@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// SensorType classifies the measurement kind.
+enum SensorType {
+  SENSOR_TYPE_UNSPECIFIED = 0;
+  SENSOR_TYPE_TEMPERATURE = 1;
+  SENSOR_TYPE_VOLTAGE = 2;
+  SENSOR_TYPE_CURRENT = 3;
+  SENSOR_TYPE_FAN_SPEED = 4;
+  SENSOR_TYPE_POWER = 5;
+  // Resource utilization as a percentage (e.g. CPU load, memory, storage).
+  SENSOR_TYPE_UTILIZATION = 6;
+  // Clock frequency (e.g. CPU frequency in MHz).
+  SENSOR_TYPE_FREQUENCY = 7;
+}
+
+// Severity classifies alert urgency.
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  SEVERITY_INFO = 1;
+  SEVERITY_WARNING = 2;
+  SEVERITY_CRITICAL = 3;
+}
+
+// SensorReading is a Tier 3 event published to a JetStream stream.
+message SensorReading {
+  string node_id = 1;
+  string sensor_id = 2;
+  SensorType type = 3;
+  double value = 4;
+  string unit = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+
+// SensorAlert is a Tier 3 event published when thresholds are breached.
+message SensorAlert {
+  string node_id = 1;
+  string sensor_id = 2;
+  SensorType type = 3;
+  Severity severity = 4;
+  double value = 5;
+  double threshold = 6;
+  string message = 7;
+  google.protobuf.Timestamp timestamp = 8;
+}
+
+// GetSensorRequest is a Tier 1 query to read a specific sensor.
+message GetSensorRequest {
+  string sensor_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// GetSensorResponse returns the latest reading for a sensor.
+message GetSensorResponse {
+  SensorReading reading = 1;
+}
+
+// ListSensorsRequest queries all sensors on a node.
+message ListSensorsRequest {}
+
+// ListSensorsResponse returns all available sensors.
+message ListSensorsResponse {
+  repeated SensorReading readings = 1;
+}
+
+// SensorService provides Tier 1 query access to sensor data over ConnectRPC.
+service SensorService {
+  rpc GetSensor(GetSensorRequest) returns (GetSensorResponse);
+  rpc ListSensors(ListSensorsRequest) returns (ListSensorsResponse);
+}

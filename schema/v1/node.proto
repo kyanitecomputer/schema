@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1/sensor.proto";
+
+// NodeInfo describes a BMC node's identity and capabilities.
+message NodeInfo {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  string name = 2;
+  repeated string capabilities = 3;
+  string version = 4;
+  google.protobuf.Timestamp started_at = 5;
+}
+
+// NodeHealth reports the health status of a node.
+message NodeHealth {
+  HealthStatus status = 1;
+  string message = 2;
+  int64 uptime_seconds = 3;
+  int32 active_services = 4;
+  int32 connected_peers = 5;
+}
+
+enum HealthStatus {
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_OK = 1;
+  HEALTH_STATUS_DEGRADED = 2;
+  HEALTH_STATUS_ERROR = 3;
+}
+
+// Heartbeat is published periodically to the fleet registry KV.
+message Heartbeat {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  google.protobuf.Timestamp timestamp = 2;
+  NodeHealth health = 3;
+  NodeInfo info = 4;
+}
+
+// DiscoveryEvent is published when nodes join or leave the fleet.
+message DiscoveryEvent {
+  string node_id = 1;
+  DiscoveryAction action = 2;
+  NodeInfo info = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+enum DiscoveryAction {
+  DISCOVERY_ACTION_UNSPECIFIED = 0;
+  DISCOVERY_ACTION_JOIN = 1;
+  DISCOVERY_ACTION_LEAVE = 2;
+  DISCOVERY_ACTION_HEALTH_CHANGE = 3;
+}
+
+// NodeKind classifies a managed node's device class.
+enum NodeKind {
+  NODE_KIND_UNSPECIFIED = 0;
+  NODE_KIND_ROUTER = 1;
+  NODE_KIND_SWITCH = 2;
+  NODE_KIND_BMC = 3;
+  NODE_KIND_RMC = 4;
+}
+
+// NodeAvailability is the reachability rollup surfaced in inventory views.
+// UNSPECIFIED doubles as "unknown".
+enum NodeAvailability {
+  NODE_AVAILABILITY_UNSPECIFIED = 0;
+  NODE_AVAILABILITY_ONLINE = 1;
+  NODE_AVAILABILITY_OFFLINE = 2;
+  NODE_AVAILABILITY_DEGRADED = 3;
+}
+
+// MetricDescriptor advertises one monitoring metric a node exposes. `id` is the
+// telemetry sensor id (the `<sensor>` token in `telemetry.<node>.<sensor>`);
+// Facet renders a live tile per descriptor and subscribes to that subject. A
+// node only advertises what it actually has — e.g. the passively-cooled Vega
+// switch advertises memory/storage/CPU-frequency but no temperature or fans.
+message MetricDescriptor {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+  string label = 2;
+  SensorType type = 3;
+  string unit = 4;
+}
+
+// NodeCapabilities is the device's self-advertised feature set, returned with
+// the inventory so Facet renders only the UI a node actually supports
+// (capability-driven UI). This is how a discovered node — including the single
+// device in standalone/Tauri mode — tells the UI which remote-control,
+// monitoring, and management surfaces to show.
+message NodeCapabilities {
+  // kvm: a remote video/KVM stream is available (BMC/RMC host console).
+  bool kvm = 1;
+  // serial_console: at least one serial console endpoint is available.
+  bool serial_console = 2;
+  // switch_management: exposes SwitchDetail via SwitchService.GetSwitch.
+  bool switch_management = 3;
+  // power_control: accepts Reset/power actions (ManagementService.Reset).
+  bool power_control = 4;
+  // monitoring metrics this node exposes (empty = no monitoring).
+  repeated MetricDescriptor metrics = 5;
+}
+
+// NodeSummary is a single managed-node row for the inventory/overview views.
+message NodeSummary {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+  NodeKind kind = 3 [(buf.validate.field).enum = {
+    not_in: [0]
+  }];
+  NodeAvailability availability = 4;
+  int64 uptime_seconds = 5 [(buf.validate.field).int64.gte = 0];
+  // Self-advertised capabilities driving capability-based UI rendering.
+  NodeCapabilities capabilities = 6;
+}
+
+// ListInventoryRequest is a Tier 1 query for the managed-node inventory.
+message ListInventoryRequest {}
+
+// ListInventoryResponse returns one summary row per managed node.
+message ListInventoryResponse {
+  repeated NodeSummary nodes = 1;
+}
+
+// SerialTarget is one serial console endpoint a node exposes. A switch points
+// at the device's own console; a BMC may expose several (its own shell plus the
+// managed host's Serial-over-LAN). The id is the serial endpoint token used on
+// the wire (subjects `serial.<id>.{in,out}`) and must be a valid NATS token.
+message SerialTarget {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+  string label = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+// ListSerialTargetsRequest queries the serial endpoints of one node.
+message ListSerialTargetsRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// ListSerialTargetsResponse returns the node's serial console endpoints.
+message ListSerialTargetsResponse {
+  repeated SerialTarget targets = 1;
+}
+
+// InventoryService provides Tier 1 query access to the node inventory.
+service InventoryService {
+  rpc ListInventory(ListInventoryRequest) returns (ListInventoryResponse);
+  rpc ListSerialTargets(ListSerialTargetsRequest) returns (ListSerialTargetsResponse);
+}

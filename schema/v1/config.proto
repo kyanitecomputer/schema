@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// NodeConfig stores per-node configuration in a NATS KV bucket.
+message NodeConfig {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  map<string, string> settings = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+// FleetConfig stores fleet-wide configuration in a replicated KV bucket.
+message FleetConfig {
+  map<string, string> settings = 1;
+  string updated_by = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+// ConfigUpdateCommand is a Tier 2 command for configuration changes.
+message ConfigUpdateCommand {
+  string request_id = 1;
+  oneof scope {
+    string node_id = 2;
+    bool fleet_wide = 3;
+  }
+  map<string, string> settings = 4;
+  google.protobuf.Timestamp requested_at = 5;
+}
+
+// ConfigEvent is a Tier 3 event when configuration changes.
+message ConfigEvent {
+  string source_node_id = 1;
+  ConfigEventType event_type = 2;
+  map<string, string> changed_keys = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+enum ConfigEventType {
+  CONFIG_EVENT_TYPE_UNSPECIFIED = 0;
+  CONFIG_EVENT_TYPE_NODE_UPDATED = 1;
+  CONFIG_EVENT_TYPE_FLEET_UPDATED = 2;
+}
+
+// GetConfigRequest is a Tier 1 query to retrieve current config.
+message GetConfigRequest {
+  string scope = 1; // "node" or "fleet"
+}
+
+// GetConfigResponse returns the active configuration.
+message GetConfigResponse {
+  oneof config {
+    NodeConfig node_config = 1;
+    FleetConfig fleet_config = 2;
+  }
+}
+
+// ConfigService provides Tier 1 query access to configuration over ConnectRPC.
+service ConfigService {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+}

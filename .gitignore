@@ -1,0 +1,7 @@
+# Rust generated-crate build output
+gen/rust/target/
+
+# Node / TypeScript build output (if a local toolchain is used)
+node_modules/
+gen/ts/dist/
+*.tsbuildinfo

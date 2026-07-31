@@ -1,0 +1,17 @@
+# Standalone crate: an empty [workspace] table stops Cargo from absorbing this
+# generated crate into any parent workspace found higher in the tree.
+[workspace]
+
+[package]
+name = "kyanite-schema"
+version = "0.0.0"
+edition = "2021"
+publish = false
+description = "Generated Rust types for the Kyanite common schema (buffa)."
+
+# no_std + alloc, no json/serde: the only consumer is the AST2700 firmware
+# (BootMCU/SSP/TSP). buffa still requires an allocator (provided by the firmware
+# binary's global allocator).
+[dependencies]
+buffa = { version = "0.7.1", default-features = false }
+buffa-types = { version = "0.7.1", default-features = false }

@@ -1,0 +1,383 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+
+// switch.proto models the management surface of a Layer 2/3 Ethernet switch
+// (the "Vega" class device driven by Vein). It is intentionally comprehensive:
+// Facet renders every capability the hardware exposes from a single
+// SwitchDetail aggregate, so the UI can show ports, VLANs, and every L2 control
+// protocol without a per-feature round trip.
+
+// PortMedia is the physical medium of a switch port.
+enum PortMedia {
+  PORT_MEDIA_UNSPECIFIED = 0;
+  PORT_MEDIA_RJ45_1G = 1;
+  PORT_MEDIA_SFP_1G = 2;
+  PORT_MEDIA_SFP_PLUS_10G = 3;
+  // CPU is the internal management port (no external connector).
+  PORT_MEDIA_CPU = 4;
+}
+
+// LinkState is the observed physical link of a port.
+enum LinkState {
+  LINK_STATE_UNSPECIFIED = 0;
+  LINK_STATE_UP = 1;
+  LINK_STATE_DOWN = 2;
+}
+
+// SwitchPort is one front-panel or CPU port.
+message SwitchPort {
+  uint32 index = 1;
+  // Front-panel label, e.g. "ge0", "sfp0", "sfp+0", "cpu".
+  string label = 2;
+  PortMedia media = 3;
+  // admin_up is the configured administrative state.
+  bool admin_up = 4;
+  LinkState link = 5;
+  // Negotiated link speed in Mbps; 0 when the link is down.
+  uint32 speed_mbps = 6;
+  string description = 7;
+}
+
+// Vlan is an 802.1Q VLAN and its member ports.
+message Vlan {
+  uint32 vid = 1 [(buf.validate.field).uint32 = {
+    gte: 1,
+    lte: 4094
+  }];
+  string name = 2;
+  // Ports carrying this VLAN untagged (access mode).
+  repeated uint32 untagged_ports = 3;
+  // Ports carrying this VLAN tagged (trunk mode).
+  repeated uint32 tagged_ports = 4;
+}
+
+// LldpNeighbor is one peer discovered via LLDP.
+message LldpNeighbor {
+  uint32 local_port = 1;
+  // Chassis ID, typically the peer's base MAC address.
+  string chassis_id = 2;
+  string port_id = 3;
+  string system_name = 4;
+  string system_description = 5;
+  uint32 ttl_seconds = 6;
+}
+
+// StpPortRole is the RSTP role assigned to a port.
+enum StpPortRole {
+  STP_PORT_ROLE_UNSPECIFIED = 0;
+  STP_PORT_ROLE_DISABLED = 1;
+  STP_PORT_ROLE_ROOT = 2;
+  STP_PORT_ROLE_DESIGNATED = 3;
+  STP_PORT_ROLE_ALTERNATE = 4;
+  STP_PORT_ROLE_BACKUP = 5;
+}
+
+// StpPortState is the RSTP forwarding state of a port.
+enum StpPortState {
+  STP_PORT_STATE_UNSPECIFIED = 0;
+  STP_PORT_STATE_DISCARDING = 1;
+  STP_PORT_STATE_LEARNING = 2;
+  STP_PORT_STATE_FORWARDING = 3;
+}
+
+// StpPort is the spanning-tree status of a single port.
+message StpPort {
+  uint32 port = 1;
+  StpPortRole role = 2;
+  StpPortState state = 3;
+  uint32 path_cost = 4;
+}
+
+// RstpConfig is the Rapid Spanning Tree (802.1w) bridge configuration.
+message RstpConfig {
+  bool enabled = 1;
+  // Bridge priority in 4096 steps (0..61440).
+  uint32 bridge_priority = 2;
+  // Bridge ID of the elected root, e.g. "32768.02:00:00:00:00:01".
+  string root_bridge = 3;
+  repeated StpPort ports = 4;
+}
+
+// LagMode is the link-aggregation negotiation mode for a group.
+enum LagMode {
+  LAG_MODE_UNSPECIFIED = 0;
+  LAG_MODE_STATIC = 1;
+  LAG_MODE_LACP_ACTIVE = 2;
+  LAG_MODE_LACP_PASSIVE = 3;
+}
+
+// LinkAggGroup is a LACP / static link-aggregation group (bond/port-channel).
+message LinkAggGroup {
+  uint32 id = 1;
+  string name = 2;
+  LagMode mode = 3;
+  repeated uint32 member_ports = 4;
+}
+
+// IgmpGroup is one snooped multicast group membership.
+message IgmpGroup {
+  // Group multicast address, e.g. "239.1.1.1".
+  string group_address = 1;
+  uint32 vlan = 2;
+  repeated uint32 ports = 3;
+}
+
+// IgmpSnoopingConfig is the IGMP-snooping configuration and learned state.
+message IgmpSnoopingConfig {
+  bool enabled = 1;
+  uint32 querier_interval_seconds = 2;
+  repeated IgmpGroup groups = 3;
+}
+
+// StormControlPort caps broadcast/multicast/unknown-unicast rates per port.
+message StormControlPort {
+  uint32 port = 1;
+  // Rate limits in packets-per-second; 0 means no limit.
+  uint32 broadcast_pps = 2;
+  uint32 multicast_pps = 3;
+  uint32 unknown_unicast_pps = 4;
+}
+
+// QosTrustMode selects which field a port trusts for ingress classification.
+enum QosTrustMode {
+  QOS_TRUST_MODE_UNSPECIFIED = 0;
+  QOS_TRUST_MODE_UNTRUSTED = 1;
+  QOS_TRUST_MODE_COS = 2;
+  QOS_TRUST_MODE_DSCP = 3;
+}
+
+// QosSchedulerMode is the egress queue scheduling discipline.
+enum QosSchedulerMode {
+  QOS_SCHEDULER_MODE_UNSPECIFIED = 0;
+  QOS_SCHEDULER_MODE_STRICT_PRIORITY = 1;
+  QOS_SCHEDULER_MODE_WEIGHTED_ROUND_ROBIN = 2;
+}
+
+// QosPort is the per-port QoS classification configuration.
+message QosPort {
+  uint32 port = 1;
+  QosTrustMode trust = 2;
+  // Default 802.1p priority (0..7) for untrusted/untagged traffic.
+  uint32 default_priority = 3;
+}
+
+// QosConfig is the switch-wide QoS configuration.
+message QosConfig {
+  QosSchedulerMode scheduler = 1;
+  repeated QosPort ports = 2;
+}
+
+// MirrorDirection selects which traffic a mirror session captures.
+enum MirrorDirection {
+  MIRROR_DIRECTION_UNSPECIFIED = 0;
+  MIRROR_DIRECTION_RX = 1;
+  MIRROR_DIRECTION_TX = 2;
+  MIRROR_DIRECTION_BOTH = 3;
+}
+
+// MirrorSession copies traffic from source ports to a destination (SPAN) port.
+message MirrorSession {
+  uint32 id = 1;
+  MirrorDirection direction = 2;
+  repeated uint32 source_ports = 3;
+  uint32 destination_port = 4;
+}
+
+// AclAction is the verdict for packets matching an ACL rule.
+enum AclAction {
+  ACL_ACTION_UNSPECIFIED = 0;
+  ACL_ACTION_PERMIT = 1;
+  ACL_ACTION_DENY = 2;
+}
+
+// AclRuleType is the match family of an ACL rule.
+enum AclRuleType {
+  ACL_RULE_TYPE_UNSPECIFIED = 0;
+  ACL_RULE_TYPE_MAC = 1;
+  ACL_RULE_TYPE_IPV4 = 2;
+  ACL_RULE_TYPE_IPV6 = 3;
+}
+
+// AclRule is one access-control-list entry, evaluated in ascending priority.
+message AclRule {
+  uint32 id = 1;
+  uint32 priority = 2;
+  AclRuleType type = 3;
+  AclAction action = 4;
+  // Human-readable match expression, e.g. "src 10.0.0.0/8 tcp dport 22".
+  string match = 5;
+}
+
+// ErpsRingState is the protection state of an ERPS (G.8032) ring.
+enum ErpsRingState {
+  ERPS_RING_STATE_UNSPECIFIED = 0;
+  ERPS_RING_STATE_IDLE = 1;
+  ERPS_RING_STATE_PROTECTION = 2;
+  ERPS_RING_STATE_PENDING = 3;
+}
+
+// ErpsRing is an Ethernet Ring Protection Switching ring.
+message ErpsRing {
+  uint32 id = 1;
+  ErpsRingState state = 2;
+  uint32 port0 = 3;
+  uint32 port1 = 4;
+  uint32 control_vlan = 5;
+  // Port currently blocked to break the loop (the RPL), if any.
+  uint32 blocked_port = 6;
+}
+
+// Dot1xPortState is the 802.1X port authorization mode.
+enum Dot1xPortState {
+  DOT1X_PORT_STATE_UNSPECIFIED = 0;
+  DOT1X_PORT_STATE_FORCE_UNAUTHORIZED = 1;
+  DOT1X_PORT_STATE_AUTO = 2;
+  DOT1X_PORT_STATE_FORCE_AUTHORIZED = 3;
+}
+
+// Dot1xPort is the 802.1X status of a single port.
+message Dot1xPort {
+  uint32 port = 1;
+  Dot1xPortState state = 2;
+  // authenticated is true when a supplicant has passed 802.1X on this port.
+  bool authenticated = 3;
+}
+
+// Dot1xConfig is the 802.1X (port-based network access control) configuration.
+message Dot1xConfig {
+  bool enabled = 1;
+  // RADIUS server the authenticator proxies to.
+  string radius_server = 2;
+  repeated Dot1xPort ports = 3;
+}
+
+// SnmpAccess is the access level of an SNMP v2c community.
+enum SnmpAccess {
+  SNMP_ACCESS_UNSPECIFIED = 0;
+  SNMP_ACCESS_READ_ONLY = 1;
+  SNMP_ACCESS_READ_WRITE = 2;
+}
+
+// SnmpCommunity is an SNMP v1/v2c community string.
+message SnmpCommunity {
+  string community = 1;
+  SnmpAccess access = 2;
+}
+
+// SnmpSecurityLevel is the USM security level of an SNMP v3 user.
+enum SnmpSecurityLevel {
+  SNMP_SECURITY_LEVEL_UNSPECIFIED = 0;
+  SNMP_SECURITY_LEVEL_NO_AUTH_NO_PRIV = 1;
+  SNMP_SECURITY_LEVEL_AUTH_NO_PRIV = 2;
+  SNMP_SECURITY_LEVEL_AUTH_PRIV = 3;
+}
+
+// SnmpV3User is an SNMP v3 USM user. Secrets are never returned on reads.
+message SnmpV3User {
+  string name = 1;
+  SnmpSecurityLevel level = 2;
+  // Auth protocol, e.g. "SHA", "MD5"; empty for no-auth.
+  string auth_protocol = 3;
+  // Privacy protocol, e.g. "AES", "DES"; empty for no-priv.
+  string priv_protocol = 4;
+}
+
+// SnmpConfig is the SNMP agent configuration.
+message SnmpConfig {
+  bool enabled = 1;
+  string location = 2;
+  string contact = 3;
+  repeated SnmpCommunity communities = 4;
+  repeated SnmpV3User v3_users = 5;
+}
+
+// SwitchInfo is the switch's identity and management addressing.
+message SwitchInfo {
+  string hostname = 1;
+  string model = 2;
+  string serial_number = 3;
+  string firmware_version = 4;
+  // Management IP in CIDR notation, e.g. "192.168.1.1/24".
+  string management_ip = 5;
+  string management_mac = 6;
+  int64 uptime_seconds = 7 [(buf.validate.field).int64.gte = 0];
+}
+
+// SwitchDetail aggregates the full management view of one switch node. Vein
+// projects its native switch state into this shape; Facet renders it directly.
+message SwitchDetail {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  SwitchInfo info = 2;
+  repeated SwitchPort ports = 3;
+  repeated Vlan vlans = 4;
+  repeated LldpNeighbor lldp_neighbors = 5;
+  RstpConfig rstp = 6;
+  repeated LinkAggGroup link_aggregation = 7;
+  IgmpSnoopingConfig igmp_snooping = 8;
+  repeated StormControlPort storm_control = 9;
+  QosConfig qos = 10;
+  repeated MirrorSession mirror_sessions = 11;
+  repeated AclRule acl_rules = 12;
+  repeated ErpsRing erps_rings = 13;
+  Dot1xConfig dot1x = 14;
+  SnmpConfig snmp = 15;
+}
+
+// GetSwitchRequest is a Tier 1 query for one switch's full detail view.
+message GetSwitchRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// GetSwitchResponse returns the requested switch's detail aggregate.
+message GetSwitchResponse {
+  SwitchDetail detail = 1;
+}
+
+// SetPortAdminRequest is a Tier 2 command to enable/disable one switch port.
+message SetPortAdminRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 port = 2;
+  bool admin_up = 3;
+}
+
+// SetVlanRequest is a Tier 2 command to create or replace a VLAN.
+message SetVlanRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  Vlan vlan = 2;
+}
+
+// DeleteVlanRequest is a Tier 2 command to remove a VLAN (VID 1 cannot be removed).
+message DeleteVlanRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 vid = 2 [(buf.validate.field).uint32 = {
+    gte: 2,
+    lte: 4094
+  }];
+}
+
+// Each mutation returns the full switch detail so the client re-renders
+// authoritative state in one round trip. buf requires a distinct response type
+// per RPC.
+message SetPortAdminResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetVlanResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteVlanResponse {
+  SwitchDetail detail = 1;
+}
+
+// SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
+// detail, served over ConnectRPC and answerable over NATS request/reply.
+service SwitchService {
+  rpc GetSwitch(GetSwitchRequest) returns (GetSwitchResponse);
+  rpc SetPortAdmin(SetPortAdminRequest) returns (SetPortAdminResponse);
+  rpc SetVlan(SetVlanRequest) returns (SetVlanResponse);
+  rpc DeleteVlan(DeleteVlanRequest) returns (DeleteVlanResponse);
+}

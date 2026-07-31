@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// ComponentState represents the current state of a managed component.
+enum ComponentState {
+  COMPONENT_STATE_UNSPECIFIED = 0;
+  COMPONENT_STATE_OFF = 1;
+  COMPONENT_STATE_ON = 2;
+  COMPONENT_STATE_TRANSITIONING = 3;
+  COMPONENT_STATE_ERROR = 4;
+  COMPONENT_STATE_QUIESCED = 5;
+  COMPONENT_STATE_DIAGNOSTIC = 6;
+}
+
+// StateAction represents a command to change component state.
+enum StateAction {
+  STATE_ACTION_UNSPECIFIED = 0;
+  STATE_ACTION_POWER_ON = 1;
+  STATE_ACTION_POWER_OFF = 2;
+  STATE_ACTION_RESET = 3;
+  STATE_ACTION_QUIESCE = 4;
+  STATE_ACTION_DIAGNOSE = 5;
+}
+
+// StateCommand is a Tier 2 command published to a JetStream work queue.
+message StateCommand {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  string component = 2 [(buf.validate.field).string.min_len = 1];
+  StateAction action = 3 [(buf.validate.field).enum = {
+    not_in: [0]
+  }];
+  string request_id = 4;
+  google.protobuf.Timestamp requested_at = 5;
+}
+
+// StateTransition is a Tier 3 event published when state changes.
+message StateTransition {
+  string node_id = 1;
+  string component = 2;
+  ComponentState previous_state = 3;
+  ComponentState current_state = 4;
+  StateAction trigger = 5;
+  string request_id = 6;
+  google.protobuf.Timestamp transitioned_at = 7;
+}
+
+// GetStateRequest is a Tier 1 query to retrieve current component state.
+message GetStateRequest {
+  string component = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// GetStateResponse returns the current state of a component.
+message GetStateResponse {
+  string node_id = 1;
+  string component = 2;
+  ComponentState state = 3;
+  google.protobuf.Timestamp last_transition = 4;
+}
+
+// ListStatesRequest queries all managed components on a node.
+message ListStatesRequest {}
+
+// ListStatesResponse returns states of all managed components.
+message ListStatesResponse {
+  repeated GetStateResponse states = 1;
+}
+
+// StateService provides Tier 1 query access to component state over ConnectRPC.
+service StateService {
+  rpc GetState(GetStateRequest) returns (GetStateResponse);
+  rpc ListStates(ListStatesRequest) returns (ListStatesResponse);
+}

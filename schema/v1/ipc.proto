@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package schema.v1;
+
+// Inter-core IPC messages exchanged over the AST2700 hardware mailbox between
+// the BootMCU RoT (Rust/no_std), the CA35 PSP (Go), and the SSP/TSP
+// coprocessors (Rust/no_std). One IpcEnvelope is one logical message; the
+// transport layer frames it across the 32-byte mailbox slots.
+//
+// Kept deliberately scalar (no strings/repeated fields) in this first revision
+// so the buffa runtime's allocations on the memory-constrained cores stay
+// minimal.
+
+// IpcEnvelope wraps every inter-core message with a sequence number so a
+// responder can correlate a reply with its request (the reply echoes `seq`).
+message IpcEnvelope {
+  uint32 seq = 1;
+
+  oneof payload {
+    Ping ping = 2;
+    Pong pong = 3;
+    GetRotStatus get_rot_status = 4;
+    RotStatus rot_status = 5;
+  }
+}
+
+// Ping is a liveness probe; the peer replies with Pong echoing `nonce`.
+message Ping {
+  uint32 nonce = 1;
+}
+
+// Pong is the reply to Ping, echoing the request's `nonce`.
+message Pong {
+  uint32 nonce = 1;
+}
+
+// GetRotStatus asks the BootMCU RoT for its current boot/security status.
+message GetRotStatus {}
+
+// RotStatus reports the Root-of-Trust state after boot. Fields mirror the
+// values the BootMCU already logs (silicon revision, Caliptra flow/boot status,
+// secure-boot strap).
+message RotStatus {
+  // Packed silicon identity: (device_id << 16) | hw_rev.
+  uint32 silicon_rev = 1;
+  // Caliptra FLOW_STATUS mailbox register.
+  uint32 caliptra_flow_status = 2;
+  // Caliptra BOOT_STATUS mailbox register.
+  uint32 caliptra_boot_status = 3;
+  // EN_SECBOOT hardware strap state.
+  bool secure_boot_enabled = 4;
+  // Caliptra reports ready-for-runtime.
+  bool caliptra_rt_ready = 5;
+}

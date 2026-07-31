@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package schema.v1;
+
+// Health is the Redfish Resource.Status "Health" rollup: a device-agnostic
+// condition summary applicable to BMCs, RMCs, switches, routers, and any of
+// their subcomponents. It mirrors the Redfish (DSP0268) Health enumeration,
+// plus the proto3-mandated zero sentinel that Redfish itself does not define.
+enum Health {
+  HEALTH_UNSPECIFIED = 0;
+  HEALTH_OK = 1;
+  HEALTH_WARNING = 2;
+  HEALTH_CRITICAL = 3;
+}
+
+// State mirrors the Redfish Resource.State enumeration: the known operative
+// states of a managed resource. HEALTH_UNSPECIFIED's analog here,
+// STATE_UNSPECIFIED, is the proto3 zero sentinel (no Redfish equivalent).
+enum State {
+  STATE_UNSPECIFIED = 0;
+  STATE_ENABLED = 1;
+  STATE_DISABLED = 2;
+  STATE_STANDBY_OFFLINE = 3;
+  STATE_STANDBY_SPARE = 4;
+  STATE_IN_TEST = 5;
+  STATE_STARTING = 6;
+  STATE_ABSENT = 7;
+  STATE_UNAVAILABLE_OFFLINE = 8;
+  STATE_DEFERRING = 9;
+  STATE_QUIESCED = 10;
+  STATE_UPDATING = 11;
+  STATE_QUALIFIED = 12;
+}
+
+// Status is the Redfish Resource.Status object, reused across every managed
+// resource (chassis, system, manager, sensor, ...). Carrying it as one shared
+// message keeps Cairn's Redfish->domain normalization a near 1:1 projection
+// while remaining equally usable for non-Redfish devices (switches/routers),
+// which Vein populates the same way.
+message Status {
+  State state = 1;
+  Health health = 2;
+  // Aggregated health of this resource and its subordinates (Redfish
+  // HealthRollup). Equals `health` when the resource has no subordinates.
+  Health health_rollup = 3;
+}

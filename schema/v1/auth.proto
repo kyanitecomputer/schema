@@ -1,0 +1,261 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_READ_ONLY = 1;
+  USER_ROLE_OPERATOR = 2;
+  USER_ROLE_ADMIN = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Auth messages
+// ---------------------------------------------------------------------------
+
+message LoginRequest {
+  string username = 1 [(buf.validate.field).string.min_len = 1];
+  string password = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message LoginResponse {
+  // Short-lived access token, held in JS memory only and attached as the bearer
+  // on the NATS WebSocket (auth callout mints the scoped NATS user from it).
+  // The long-lived refresh secret is an HttpOnly, Secure, SameSite cookie set by
+  // the HTTP layer via Set-Cookie — it never appears in this message or in JS.
+  string access_token = 1;
+  // When access_token expires; the client refreshes (GetCurrentUser) before this.
+  google.protobuf.Timestamp expires_at = 2;
+  string username = 3;
+  UserRole role = 4;
+  // True when the user is still using the default seeded password.
+  bool must_change_password = 5;
+}
+
+message LogoutRequest {}
+message LogoutResponse {}
+
+message GetCurrentUserRequest {}
+
+message GetCurrentUserResponse {
+  string username = 1;
+  UserRole role = 2;
+  // Fresh short-lived access token — re-issued on every call (authorized by the
+  // HttpOnly refresh cookie) so page reloads and token rotation never require a
+  // re-login. This RPC doubles as the boot/refresh endpoint.
+  string access_token = 3;
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {}
+
+// ---------------------------------------------------------------------------
+// WebAuthn / passkey messages
+//
+// NOTE on payload encoding: the WebAuthn credential creation/request options
+// and authenticator responses are complex nested JSON structures defined by
+// the W3C WebAuthn spec. We encode them as JSON strings here for simplicity,
+// matching what go-webauthn/webauthn produces and what @simplewebauthn/browser
+// expects. An alternative worth considering for a future revision would be to
+// use google.protobuf.Struct (which maps to arbitrary JSON) or raw `bytes`
+// (base64url-encoded CBOR) — both would be more type-safe but require
+// custom marshalling on both sides.
+// ---------------------------------------------------------------------------
+
+message WebAuthnRegisterBeginRequest {}
+
+message WebAuthnRegisterBeginResponse {
+  // JSON-encoded PublicKeyCredentialCreationOptions from go-webauthn.
+  string options_json = 1;
+}
+
+message WebAuthnRegisterFinishRequest {
+  // JSON-encoded AuthenticatorAttestationResponse from the browser.
+  string credential_json = 1;
+}
+
+message WebAuthnRegisterFinishResponse {}
+
+message WebAuthnLoginBeginRequest {}
+
+message WebAuthnLoginBeginResponse {
+  // JSON-encoded PublicKeyCredentialRequestOptions from go-webauthn.
+  string options_json = 1;
+}
+
+message WebAuthnLoginFinishRequest {
+  // JSON-encoded AuthenticatorAssertionResponse from the browser.
+  string credential_json = 1;
+}
+
+message WebAuthnLoginFinishResponse {
+  // Same access-token + HttpOnly-cookie model as LoginResponse.
+  string access_token = 1;
+  google.protobuf.Timestamp expires_at = 2;
+  string username = 3;
+  UserRole role = 4;
+}
+
+// ---------------------------------------------------------------------------
+// OIDC messages
+// ---------------------------------------------------------------------------
+
+message OIDCProvider {
+  string name = 1;
+  string issuer = 2;
+  bool enabled = 3;
+}
+
+message ListOIDCProvidersRequest {}
+
+message ListOIDCProvidersResponse {
+  repeated OIDCProvider providers = 1;
+}
+
+message OIDCProviderConfig {
+  string name = 1;
+  string issuer = 2;
+  string client_id = 3;
+  // Secret is write-only: never returned on reads.
+  string client_secret = 4;
+  repeated string scopes = 5;
+  string redirect_url = 6;
+  // Custom claim to use as subject (e.g. "oid" for Azure Entra ID).
+  string subject_claim = 7;
+  bool enabled = 8;
+}
+
+message SaveOIDCProviderRequest {
+  OIDCProviderConfig config = 1;
+}
+
+message SaveOIDCProviderResponse {}
+
+message DeleteOIDCProviderRequest {
+  string name = 1;
+}
+
+message DeleteOIDCProviderResponse {}
+
+// ---------------------------------------------------------------------------
+// User management messages
+// ---------------------------------------------------------------------------
+
+message User {
+  string username = 1;
+  UserRole role = 2;
+}
+
+message ListUsersRequest {}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+  UserRole role = 3;
+}
+
+message CreateUserResponse {}
+
+message DeleteUserRequest {
+  string username = 1;
+}
+
+message DeleteUserResponse {}
+
+message SetUserRoleRequest {
+  string username = 1;
+  UserRole role = 2;
+}
+
+message SetUserRoleResponse {}
+
+// ---------------------------------------------------------------------------
+// OIDC principal management messages
+// ---------------------------------------------------------------------------
+
+message OIDCPrincipal {
+  // Composite key: "{issuer}|{subject}"
+  string key = 1;
+  string issuer = 2;
+  string subject = 3;
+  string label = 4;
+  UserRole role = 5;
+  bool disabled = 6;
+}
+
+message ListOIDCPrincipalsRequest {}
+message ListOIDCPrincipalsResponse {
+  repeated OIDCPrincipal principals = 1;
+}
+
+message CreateOIDCPrincipalRequest {
+  string issuer = 1;
+  string subject = 2;
+  string label = 3;
+  UserRole role = 4;
+}
+message CreateOIDCPrincipalResponse {}
+
+message DeleteOIDCPrincipalRequest {
+  string key = 1;
+}
+message DeleteOIDCPrincipalResponse {}
+
+message SetOIDCPrincipalRoleRequest {
+  string key = 1;
+  UserRole role = 2;
+}
+message SetOIDCPrincipalRoleResponse {}
+
+// ---------------------------------------------------------------------------
+// Services
+// ---------------------------------------------------------------------------
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetCurrentUserResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+
+  // WebAuthn / passkey flows
+  rpc WebAuthnRegisterBegin(WebAuthnRegisterBeginRequest) returns (WebAuthnRegisterBeginResponse);
+  rpc WebAuthnRegisterFinish(WebAuthnRegisterFinishRequest) returns (WebAuthnRegisterFinishResponse);
+  rpc WebAuthnLoginBegin(WebAuthnLoginBeginRequest) returns (WebAuthnLoginBeginResponse);
+  rpc WebAuthnLoginFinish(WebAuthnLoginFinishRequest) returns (WebAuthnLoginFinishResponse);
+
+  // OIDC provider listing (public — no auth required)
+  rpc ListOIDCProviders(ListOIDCProvidersRequest) returns (ListOIDCProvidersResponse);
+
+  // OIDC provider management (admin only)
+  rpc SaveOIDCProvider(SaveOIDCProviderRequest) returns (SaveOIDCProviderResponse);
+  rpc DeleteOIDCProvider(DeleteOIDCProviderRequest) returns (DeleteOIDCProviderResponse);
+
+  // OIDC principal management (admin only)
+  rpc ListOIDCPrincipals(ListOIDCPrincipalsRequest) returns (ListOIDCPrincipalsResponse);
+  rpc CreateOIDCPrincipal(CreateOIDCPrincipalRequest) returns (CreateOIDCPrincipalResponse);
+  rpc DeleteOIDCPrincipal(DeleteOIDCPrincipalRequest) returns (DeleteOIDCPrincipalResponse);
+  rpc SetOIDCPrincipalRole(SetOIDCPrincipalRoleRequest) returns (SetOIDCPrincipalRoleResponse);
+}
+
+service UserService {
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  rpc SetUserRole(SetUserRoleRequest) returns (SetUserRoleResponse);
+}

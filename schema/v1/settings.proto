@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// settings.proto models the management-plane (appliance/device) system settings
+// surfaced on Facet's Settings page: time/NTP, the management network
+// interface, and toggleable management services. User accounts and their roles
+// live in auth.proto (UserService); this file covers everything else the
+// Settings page edits.
+
+// TimeSettings is the clock / NTP configuration.
+message TimeSettings {
+  bool ntp_enabled = 1;
+  // Upstream NTP servers, in preference order.
+  repeated string ntp_servers = 2;
+  // IANA timezone name, e.g. "UTC" or "Europe/Berlin".
+  string timezone = 3;
+  // Current device wall-clock time (read-only).
+  google.protobuf.Timestamp current_time = 4;
+  // True when the clock is disciplined to an NTP source.
+  bool synchronized = 5;
+}
+
+// AddressMode is how the management interface obtains its address.
+enum AddressMode {
+  ADDRESS_MODE_UNSPECIFIED = 0;
+  ADDRESS_MODE_DHCP = 1;
+  ADDRESS_MODE_STATIC = 2;
+}
+
+// NetworkSettings is the management interface IP configuration.
+message NetworkSettings {
+  AddressMode mode = 1;
+  // Management address in CIDR notation, e.g. "192.168.1.1/24".
+  string ip_address = 2;
+  string gateway = 3;
+  repeated string dns_servers = 4;
+  string hostname = 5;
+  // Burned-in management MAC (read-only).
+  string mac_address = 6;
+}
+
+// ServiceSettings toggles the management services exposed by the device.
+message ServiceSettings {
+  bool ssh_enabled = 1;
+  uint32 ssh_port = 2;
+  bool snmp_enabled = 3;
+  bool http_enabled = 4;
+}
+
+// SystemSettings aggregates all management-plane settings.
+message SystemSettings {
+  TimeSettings time = 1;
+  NetworkSettings network = 2;
+  ServiceSettings services = 3;
+}
+
+// GetSettingsRequest is a Tier 1 query for the management-plane settings.
+message GetSettingsRequest {}
+
+// GetSettingsResponse returns the current management-plane settings.
+message GetSettingsResponse {
+  SystemSettings settings = 1;
+}
+
+// SetTimeSettingsRequest is a Tier 2 command to update the clock/NTP config.
+message SetTimeSettingsRequest {
+  TimeSettings time = 1;
+}
+
+// SetNetworkSettingsRequest is a Tier 2 command to update the management network.
+message SetNetworkSettingsRequest {
+  NetworkSettings network = 1;
+}
+
+// SetServiceSettingsRequest is a Tier 2 command to toggle management services.
+message SetServiceSettingsRequest {
+  ServiceSettings services = 1;
+}
+
+// Each setter returns the full settings after the update, so the client
+// re-renders authoritative state (including any server normalization). buf
+// requires a distinct response type per RPC.
+message SetTimeSettingsResponse {
+  SystemSettings settings = 1;
+}
+
+message SetNetworkSettingsResponse {
+  SystemSettings settings = 1;
+}
+
+message SetServiceSettingsResponse {
+  SystemSettings settings = 1;
+}
+
+// SettingsService is the Tier 1 query + Tier 2 command surface for the
+// management-plane settings.
+service SettingsService {
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
+  rpc SetTimeSettings(SetTimeSettingsRequest) returns (SetTimeSettingsResponse);
+  rpc SetNetworkSettings(SetNetworkSettingsRequest) returns (SetNetworkSettingsResponse);
+  rpc SetServiceSettings(SetServiceSettingsRequest) returns (SetServiceSettingsResponse);
+}

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package schema.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "schema/v1/common.proto";
+import "schema/v1/node.proto";
+
+// PowerState mirrors the Redfish PowerState enum (Chassis/ComputerSystem): the
+// coarse power condition of a managed system or chassis. It applies to
+// BMC/RMC-attached hosts as well as switches and routers that expose power
+// control. POWER_STATE_UNSPECIFIED is the proto3 zero sentinel.
+enum PowerState {
+  POWER_STATE_UNSPECIFIED = 0;
+  POWER_STATE_ON = 1;
+  POWER_STATE_OFF = 2;
+  POWER_STATE_POWERING_ON = 3;
+  POWER_STATE_POWERING_OFF = 4;
+  POWER_STATE_PAUSED = 5;
+}
+
+// ResetType mirrors the Redfish Resource.ResetType enum: the reset/power
+// actions accepted by ComputerSystem.Reset, Chassis.Reset, and Manager.Reset.
+// This is the canonical management vocabulary for power control across every
+// device class. The generic StateAction in state.proto predates this and is
+// retained for the lower-level NATS work-queue path.
+enum ResetType {
+  RESET_TYPE_UNSPECIFIED = 0;
+  RESET_TYPE_ON = 1;
+  RESET_TYPE_FORCE_OFF = 2;
+  RESET_TYPE_GRACEFUL_SHUTDOWN = 3;
+  RESET_TYPE_GRACEFUL_RESTART = 4;
+  RESET_TYPE_FORCE_RESTART = 5;
+  RESET_TYPE_NMI = 6;
+  RESET_TYPE_FORCE_ON = 7;
+  RESET_TYPE_PUSH_POWER_BUTTON = 8;
+  RESET_TYPE_POWER_CYCLE = 9;
+  RESET_TYPE_SUSPEND = 10;
+  RESET_TYPE_RESUME = 11;
+}
+
+// ManagedSystem is the normalized, Redfish-derived detail view of one managed
+// entity: a Redfish ComputerSystem/Chassis for BMC/RMC-attached hosts, or the
+// equivalent identity for a switch or router. Cairn projects Redfish resources
+// into this shape; Vein fills the same fields from switch-native sources, so
+// Facet sees one model regardless of device class. It complements the lighter
+// NodeSummary inventory row in node.proto with full identity and power detail.
+message ManagedSystem {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+  string name = 2;
+  NodeKind kind = 3;
+
+  // Redfish identity block (Chassis/ComputerSystem). An empty string means the
+  // device did not report that property.
+  string manufacturer = 4;
+  string model = 5;
+  string serial_number = 6;
+  string part_number = 7;
+  string sku = 8;
+  string asset_tag = 9;
+  string firmware_version = 10;
+
+  PowerState power_state = 11;
+  Status status = 12;
+
+  // Redfish LocationIndicatorActive: the physical locate/identify beacon.
+  bool location_indicator_active = 13;
+
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+// GetSystemRequest is a Tier 1 query for one managed system's detail view.
+message GetSystemRequest {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// GetSystemResponse returns the detail view for the requested system.
+message GetSystemResponse {
+  ManagedSystem system = 1;
+}
+
+// ListSystemsRequest queries detail rows for all managed systems.
+message ListSystemsRequest {}
+
+// ListSystemsResponse returns one detail row per managed system.
+message ListSystemsResponse {
+  repeated ManagedSystem systems = 1;
+}
+
+// ResetRequest is a Tier 2 management action mapping to Redfish *.Reset.
+message ResetRequest {
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+  // Optional subordinate component (e.g. a specific chassis or PSU). An empty
+  // value targets the system itself.
+  string component = 2;
+  ResetType reset_type = 3 [(buf.validate.field).enum = {
+    not_in: [0]
+  }];
+  string request_id = 4;
+}
+
+// ResetResponse acknowledges an accepted reset action.
+message ResetResponse {
+  PowerState power_state = 1;
+  google.protobuf.Timestamp accepted_at = 2;
+}
+
+// ManagementService is the Redfish-aligned Tier 1 query and Tier 2 action
+// surface for managed systems, served over ConnectRPC.
+service ManagementService {
+  rpc GetSystem(GetSystemRequest) returns (GetSystemResponse);
+  rpc ListSystems(ListSystemsRequest) returns (ListSystemsResponse);
+  rpc Reset(ResetRequest) returns (ResetResponse);
+}

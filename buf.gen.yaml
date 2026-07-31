@@ -1,0 +1,69 @@
+version: v2
+# Common Kyanite schema: one set of protobuf definitions generates Go,
+# TypeScript, and Rust. Output is grouped per language under gen/<lang>/.
+#
+# clean: false is intentional. The Go (gen/go) and TS (gen/ts) output roots also
+# hold hand-written module manifests (go.mod/go.sum, package.json); clean: true
+# would wipe them on every run. Regeneration overwrites the generated files in
+# place. Caveat: if a .proto is deleted, its stale generated files must be
+# removed by hand.
+clean: false
+
+managed:
+  enabled: true
+  override:
+    # Default Go import prefix for our own messages (schema.v1 -> .../gen/go/schema/v1).
+    - file_option: go_package_prefix
+      value: src.kyanite.computer/schema/gen/go
+  # protovalidate ships its own Go module; managed mode must NOT rewrite its
+  # go_package or the generated Go won't compile (per the protovalidate Go
+  # quickstart). protoc-gen-go still emits a blank import of the protovalidate
+  # runtime to register the buf.validate extensions.
+  disable:
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
+
+plugins:
+  # --- Go: messages + fast codec + ConnectRPC handlers ---
+  # (Consumed by the Go control-plane backend, not by Facet.) No validate codegen
+  # plugin: modern protovalidate validates at runtime via buf.build/go/protovalidate
+  # against the buf.validate rules compiled into the message descriptors.
+  - remote: buf.build/protocolbuffers/go:v1.36.11
+    out: gen/go
+    opt: paths=source_relative
+  - remote: buf.build/community/planetscale-vtprotobuf:v0.6.0
+    out: gen/go
+    opt:
+      - paths=source_relative
+      - features=marshal+unmarshal+size
+  - remote: buf.build/connectrpc/go:v1.20.0
+    out: gen/go
+    opt: paths=source_relative
+
+  # --- TypeScript: protobuf-es messages + service descriptors (consumed by Facet) ---
+  # No separate connect-es plugin: with @bufbuild/protobuf v2 + @connectrpc/connect v2
+  # the service descriptors land directly in *_pb.ts.
+  # include_imports: true emits the buf.validate (and other imported) descriptors
+  # so the validate rules compile into our descriptors and protovalidate-es can
+  # read them — and so the relative `buf/validate/validate_pb` import resolves.
+  - remote: buf.build/bufbuild/es:v2.12.1
+    out: gen/ts
+    opt:
+      - target=ts
+      - js_import_style=module
+    include_imports: true
+
+  # --- Rust: anthropics/buffa (pure-Rust protobuf, editions-first, zero-copy views) ---
+  # file_per_package emits one <dotted.package>.rs; a hand-written mod tree in
+  # gen/rust/src wires it into the crate. json=false: the only Rust consumer is
+  # the memory-constrained AST2700 firmware (BootMCU/SSP/TSP), which needs a lean
+  # no_std+alloc build — dropping json avoids pulling serde/serde_json into the
+  # FMC. Re-enable if a host-side Rust consumer needs JSON codecs.
+  - remote: buf.build/anthropics/buffa:v0.7.1
+    out: gen/rust/src/gen
+    opt:
+      - file_per_package=true
+      - json=false
+
+inputs:
+  - directory: .
