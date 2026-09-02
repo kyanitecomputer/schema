@@ -412,6 +412,16 @@ message SetIgmpRequest {
   uint32 querier_interval_seconds = 3;
 }
 
+// SetStormControlRequest sets one port's storm-control rate limits (broadcast,
+// multicast and unknown-unicast, in packets-per-second; 0 disables a limit),
+// keyed by the port index inside config. Storm control has no stable OpenConfig
+// model, so Vein maps this to a vendor augmentation of the interface's ethernet
+// config.
+message SetStormControlRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  StormControlPort config = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -451,6 +461,10 @@ message SetIgmpResponse {
   SwitchDetail detail = 1;
 }
 
+message SetStormControlResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -464,4 +478,5 @@ service SwitchService {
   rpc SetLag(SetLagRequest) returns (SetLagResponse);
   rpc DeleteLag(DeleteLagRequest) returns (DeleteLagResponse);
   rpc SetIgmp(SetIgmpRequest) returns (SetIgmpResponse);
+  rpc SetStormControl(SetStormControlRequest) returns (SetStormControlResponse);
 }
