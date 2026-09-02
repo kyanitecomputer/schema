@@ -403,6 +403,15 @@ message DeleteLagRequest {
   uint32 id = 2;
 }
 
+// SetIgmpRequest sets the switch-wide IGMP-snooping configuration, aligned with
+// the openconfig igmp-snooping config container. The snooped groups reported in
+// IgmpSnoopingConfig are learned state and stay read-only.
+message SetIgmpRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  bool enabled = 2;
+  uint32 querier_interval_seconds = 3;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -438,6 +447,10 @@ message DeleteLagResponse {
   SwitchDetail detail = 1;
 }
 
+message SetIgmpResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -450,4 +463,5 @@ service SwitchService {
   rpc SetRstpPort(SetRstpPortRequest) returns (SetRstpPortResponse);
   rpc SetLag(SetLagRequest) returns (SetLagResponse);
   rpc DeleteLag(DeleteLagRequest) returns (DeleteLagResponse);
+  rpc SetIgmp(SetIgmpRequest) returns (SetIgmpResponse);
 }

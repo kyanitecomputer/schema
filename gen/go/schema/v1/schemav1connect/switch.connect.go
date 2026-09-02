@@ -55,6 +55,8 @@ const (
 	SwitchServiceSetLagProcedure = "/schema.v1.SwitchService/SetLag"
 	// SwitchServiceDeleteLagProcedure is the fully-qualified name of the SwitchService's DeleteLag RPC.
 	SwitchServiceDeleteLagProcedure = "/schema.v1.SwitchService/DeleteLag"
+	// SwitchServiceSetIgmpProcedure is the fully-qualified name of the SwitchService's SetIgmp RPC.
+	SwitchServiceSetIgmpProcedure = "/schema.v1.SwitchService/SetIgmp"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -68,6 +70,7 @@ type SwitchServiceClient interface {
 	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
 	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
+	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -135,6 +138,12 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("DeleteLag")),
 			connect.WithClientOptions(opts...),
 		),
+		setIgmp: connect.NewClient[v1.SetIgmpRequest, v1.SetIgmpResponse](
+			httpClient,
+			baseURL+SwitchServiceSetIgmpProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetIgmp")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -149,6 +158,7 @@ type switchServiceClient struct {
 	setRstpPort   *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
 	setLag        *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
 	deleteLag     *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
+	setIgmp       *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -196,6 +206,11 @@ func (c *switchServiceClient) DeleteLag(ctx context.Context, req *connect.Reques
 	return c.deleteLag.CallUnary(ctx, req)
 }
 
+// SetIgmp calls schema.v1.SwitchService.SetIgmp.
+func (c *switchServiceClient) SetIgmp(ctx context.Context, req *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error) {
+	return c.setIgmp.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -207,6 +222,7 @@ type SwitchServiceHandler interface {
 	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
 	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
+	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -270,6 +286,12 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("DeleteLag")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetIgmpHandler := connect.NewUnaryHandler(
+		SwitchServiceSetIgmpProcedure,
+		svc.SetIgmp,
+		connect.WithSchema(switchServiceMethods.ByName("SetIgmp")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -290,6 +312,8 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetLagHandler.ServeHTTP(w, r)
 		case SwitchServiceDeleteLagProcedure:
 			switchServiceDeleteLagHandler.ServeHTTP(w, r)
+		case SwitchServiceSetIgmpProcedure:
+			switchServiceSetIgmpHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -333,4 +357,8 @@ func (UnimplementedSwitchServiceHandler) SetLag(context.Context, *connect.Reques
 
 func (UnimplementedSwitchServiceHandler) DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteLag is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetIgmp is not implemented"))
 }
