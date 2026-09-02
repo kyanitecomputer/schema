@@ -388,6 +388,21 @@ message SetRstpPortRequest {
   uint32 path_cost = 3;
 }
 
+// SetLagRequest creates or replaces a link-aggregation group, keyed by its id.
+// It aligns with the openconfig-if-aggregate aggregation config for the group
+// and openconfig-lacp for the negotiation mode; member_ports mirror the members
+// that reference the aggregate.
+message SetLagRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  LinkAggGroup lag = 2;
+}
+
+// DeleteLagRequest removes a link-aggregation group by id.
+message DeleteLagRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 id = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -415,6 +430,14 @@ message SetRstpPortResponse {
   SwitchDetail detail = 1;
 }
 
+message SetLagResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteLagResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -425,4 +448,6 @@ service SwitchService {
   rpc DeleteVlan(DeleteVlanRequest) returns (DeleteVlanResponse);
   rpc SetRstp(SetRstpRequest) returns (SetRstpResponse);
   rpc SetRstpPort(SetRstpPortRequest) returns (SetRstpPortResponse);
+  rpc SetLag(SetLagRequest) returns (SetLagResponse);
+  rpc DeleteLag(DeleteLagRequest) returns (DeleteLagResponse);
 }

@@ -51,6 +51,10 @@ const (
 	// SwitchServiceSetRstpPortProcedure is the fully-qualified name of the SwitchService's SetRstpPort
 	// RPC.
 	SwitchServiceSetRstpPortProcedure = "/schema.v1.SwitchService/SetRstpPort"
+	// SwitchServiceSetLagProcedure is the fully-qualified name of the SwitchService's SetLag RPC.
+	SwitchServiceSetLagProcedure = "/schema.v1.SwitchService/SetLag"
+	// SwitchServiceDeleteLagProcedure is the fully-qualified name of the SwitchService's DeleteLag RPC.
+	SwitchServiceDeleteLagProcedure = "/schema.v1.SwitchService/DeleteLag"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -62,6 +66,8 @@ type SwitchServiceClient interface {
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
 	SetRstp(context.Context, *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error)
 	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
+	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
+	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -117,6 +123,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetRstpPort")),
 			connect.WithClientOptions(opts...),
 		),
+		setLag: connect.NewClient[v1.SetLagRequest, v1.SetLagResponse](
+			httpClient,
+			baseURL+SwitchServiceSetLagProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetLag")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteLag: connect.NewClient[v1.DeleteLagRequest, v1.DeleteLagResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteLagProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteLag")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -129,6 +147,8 @@ type switchServiceClient struct {
 	deleteVlan    *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
 	setRstp       *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
 	setRstpPort   *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
+	setLag        *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
+	deleteLag     *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -166,6 +186,16 @@ func (c *switchServiceClient) SetRstpPort(ctx context.Context, req *connect.Requ
 	return c.setRstpPort.CallUnary(ctx, req)
 }
 
+// SetLag calls schema.v1.SwitchService.SetLag.
+func (c *switchServiceClient) SetLag(ctx context.Context, req *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error) {
+	return c.setLag.CallUnary(ctx, req)
+}
+
+// DeleteLag calls schema.v1.SwitchService.DeleteLag.
+func (c *switchServiceClient) DeleteLag(ctx context.Context, req *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error) {
+	return c.deleteLag.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -175,6 +205,8 @@ type SwitchServiceHandler interface {
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
 	SetRstp(context.Context, *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error)
 	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
+	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
+	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -226,6 +258,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetRstpPort")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetLagHandler := connect.NewUnaryHandler(
+		SwitchServiceSetLagProcedure,
+		svc.SetLag,
+		connect.WithSchema(switchServiceMethods.ByName("SetLag")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteLagHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteLagProcedure,
+		svc.DeleteLag,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteLag")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -242,6 +286,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetRstpHandler.ServeHTTP(w, r)
 		case SwitchServiceSetRstpPortProcedure:
 			switchServiceSetRstpPortHandler.ServeHTTP(w, r)
+		case SwitchServiceSetLagProcedure:
+			switchServiceSetLagHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteLagProcedure:
+			switchServiceDeleteLagHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -277,4 +325,12 @@ func (UnimplementedSwitchServiceHandler) SetRstp(context.Context, *connect.Reque
 
 func (UnimplementedSwitchServiceHandler) SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetRstpPort is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetLag is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteLag is not implemented"))
 }
