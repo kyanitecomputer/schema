@@ -82,6 +82,11 @@ const (
 	// SwitchServiceDeleteErpsProcedure is the fully-qualified name of the SwitchService's DeleteErps
 	// RPC.
 	SwitchServiceDeleteErpsProcedure = "/schema.v1.SwitchService/DeleteErps"
+	// SwitchServiceSetDot1XProcedure is the fully-qualified name of the SwitchService's SetDot1x RPC.
+	SwitchServiceSetDot1XProcedure = "/schema.v1.SwitchService/SetDot1x"
+	// SwitchServiceSetDot1XPortProcedure is the fully-qualified name of the SwitchService's
+	// SetDot1xPort RPC.
+	SwitchServiceSetDot1XPortProcedure = "/schema.v1.SwitchService/SetDot1xPort"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -106,6 +111,8 @@ type SwitchServiceClient interface {
 	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
 	SetErps(context.Context, *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error)
 	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
+	SetDot1X(context.Context, *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error)
+	SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -239,6 +246,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("DeleteErps")),
 			connect.WithClientOptions(opts...),
 		),
+		setDot1X: connect.NewClient[v1.SetDot1XRequest, v1.SetDot1XResponse](
+			httpClient,
+			baseURL+SwitchServiceSetDot1XProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetDot1x")),
+			connect.WithClientOptions(opts...),
+		),
+		setDot1XPort: connect.NewClient[v1.SetDot1XPortRequest, v1.SetDot1XPortResponse](
+			httpClient,
+			baseURL+SwitchServiceSetDot1XPortProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetDot1xPort")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -264,6 +283,8 @@ type switchServiceClient struct {
 	reorderAcl      *connect.Client[v1.ReorderAclRequest, v1.ReorderAclResponse]
 	setErps         *connect.Client[v1.SetErpsRequest, v1.SetErpsResponse]
 	deleteErps      *connect.Client[v1.DeleteErpsRequest, v1.DeleteErpsResponse]
+	setDot1X        *connect.Client[v1.SetDot1XRequest, v1.SetDot1XResponse]
+	setDot1XPort    *connect.Client[v1.SetDot1XPortRequest, v1.SetDot1XPortResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -366,6 +387,16 @@ func (c *switchServiceClient) DeleteErps(ctx context.Context, req *connect.Reque
 	return c.deleteErps.CallUnary(ctx, req)
 }
 
+// SetDot1X calls schema.v1.SwitchService.SetDot1x.
+func (c *switchServiceClient) SetDot1X(ctx context.Context, req *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error) {
+	return c.setDot1X.CallUnary(ctx, req)
+}
+
+// SetDot1XPort calls schema.v1.SwitchService.SetDot1xPort.
+func (c *switchServiceClient) SetDot1XPort(ctx context.Context, req *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error) {
+	return c.setDot1XPort.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -388,6 +419,8 @@ type SwitchServiceHandler interface {
 	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
 	SetErps(context.Context, *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error)
 	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
+	SetDot1X(context.Context, *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error)
+	SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -517,6 +550,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("DeleteErps")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetDot1XHandler := connect.NewUnaryHandler(
+		SwitchServiceSetDot1XProcedure,
+		svc.SetDot1X,
+		connect.WithSchema(switchServiceMethods.ByName("SetDot1x")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceSetDot1XPortHandler := connect.NewUnaryHandler(
+		SwitchServiceSetDot1XPortProcedure,
+		svc.SetDot1XPort,
+		connect.WithSchema(switchServiceMethods.ByName("SetDot1xPort")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -559,6 +604,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetErpsHandler.ServeHTTP(w, r)
 		case SwitchServiceDeleteErpsProcedure:
 			switchServiceDeleteErpsHandler.ServeHTTP(w, r)
+		case SwitchServiceSetDot1XProcedure:
+			switchServiceSetDot1XHandler.ServeHTTP(w, r)
+		case SwitchServiceSetDot1XPortProcedure:
+			switchServiceSetDot1XPortHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -646,4 +695,12 @@ func (UnimplementedSwitchServiceHandler) SetErps(context.Context, *connect.Reque
 
 func (UnimplementedSwitchServiceHandler) DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteErps is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetDot1X(context.Context, *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetDot1x is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetDot1xPort is not implemented"))
 }
