@@ -452,6 +452,28 @@ message DeleteMirrorRequest {
   uint32 id = 2;
 }
 
+// SetAclRequest creates or replaces an ACL rule, keyed by its id. Aligns with
+// the openconfig-acl acl-entry config, where the rule's priority is its
+// sequence-id.
+message SetAclRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  AclRule rule = 2;
+}
+
+// DeleteAclRequest removes an ACL rule by id.
+message DeleteAclRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 id = 2;
+}
+
+// ReorderAclRequest sets the ACL evaluation order by listing the rule ids in the
+// desired order; the target reassigns each rule's priority (its openconfig-acl
+// sequence-id) to match. rule_ids must cover the existing rules.
+message ReorderAclRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  repeated uint32 rule_ids = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -511,6 +533,18 @@ message DeleteMirrorResponse {
   SwitchDetail detail = 1;
 }
 
+message SetAclResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteAclResponse {
+  SwitchDetail detail = 1;
+}
+
+message ReorderAclResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -529,4 +563,7 @@ service SwitchService {
   rpc SetQosPort(SetQosPortRequest) returns (SetQosPortResponse);
   rpc SetMirror(SetMirrorRequest) returns (SetMirrorResponse);
   rpc DeleteMirror(DeleteMirrorRequest) returns (DeleteMirrorResponse);
+  rpc SetAcl(SetAclRequest) returns (SetAclResponse);
+  rpc DeleteAcl(DeleteAclRequest) returns (DeleteAclResponse);
+  rpc ReorderAcl(ReorderAclRequest) returns (ReorderAclResponse);
 }
