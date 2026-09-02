@@ -474,6 +474,27 @@ message ReorderAclRequest {
   repeated uint32 rule_ids = 2;
 }
 
+// SetErpsRequest creates or replaces an ERPS (G.8032) ring by id: its two ring
+// ports and the control VLAN. The ring state and the currently-blocked (RPL)
+// port are operational and stay read-only. G.8032 has no standard OpenConfig
+// model, so Vein maps this to a vendor augmentation.
+message SetErpsRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 id = 2;
+  uint32 port0 = 3;
+  uint32 port1 = 4;
+  uint32 control_vlan = 5 [(buf.validate.field).uint32 = {
+    gte: 1,
+    lte: 4094
+  }];
+}
+
+// DeleteErpsRequest removes an ERPS ring by id.
+message DeleteErpsRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 id = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -545,6 +566,14 @@ message ReorderAclResponse {
   SwitchDetail detail = 1;
 }
 
+message SetErpsResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteErpsResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -566,4 +595,6 @@ service SwitchService {
   rpc SetAcl(SetAclRequest) returns (SetAclResponse);
   rpc DeleteAcl(DeleteAclRequest) returns (DeleteAclResponse);
   rpc ReorderAcl(ReorderAclRequest) returns (ReorderAclResponse);
+  rpc SetErps(SetErpsRequest) returns (SetErpsResponse);
+  rpc DeleteErps(DeleteErpsRequest) returns (DeleteErpsResponse);
 }
