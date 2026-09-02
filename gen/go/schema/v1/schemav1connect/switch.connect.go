@@ -46,6 +46,11 @@ const (
 	// SwitchServiceDeleteVlanProcedure is the fully-qualified name of the SwitchService's DeleteVlan
 	// RPC.
 	SwitchServiceDeleteVlanProcedure = "/schema.v1.SwitchService/DeleteVlan"
+	// SwitchServiceSetRstpProcedure is the fully-qualified name of the SwitchService's SetRstp RPC.
+	SwitchServiceSetRstpProcedure = "/schema.v1.SwitchService/SetRstp"
+	// SwitchServiceSetRstpPortProcedure is the fully-qualified name of the SwitchService's SetRstpPort
+	// RPC.
+	SwitchServiceSetRstpPortProcedure = "/schema.v1.SwitchService/SetRstpPort"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -55,6 +60,8 @@ type SwitchServiceClient interface {
 	SetPortConfig(context.Context, *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error)
 	SetVlan(context.Context, *connect.Request[v1.SetVlanRequest]) (*connect.Response[v1.SetVlanResponse], error)
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
+	SetRstp(context.Context, *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error)
+	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -98,6 +105,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("DeleteVlan")),
 			connect.WithClientOptions(opts...),
 		),
+		setRstp: connect.NewClient[v1.SetRstpRequest, v1.SetRstpResponse](
+			httpClient,
+			baseURL+SwitchServiceSetRstpProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetRstp")),
+			connect.WithClientOptions(opts...),
+		),
+		setRstpPort: connect.NewClient[v1.SetRstpPortRequest, v1.SetRstpPortResponse](
+			httpClient,
+			baseURL+SwitchServiceSetRstpPortProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetRstpPort")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -108,6 +127,8 @@ type switchServiceClient struct {
 	setPortConfig *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
 	setVlan       *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
 	deleteVlan    *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
+	setRstp       *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
+	setRstpPort   *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -135,6 +156,16 @@ func (c *switchServiceClient) DeleteVlan(ctx context.Context, req *connect.Reque
 	return c.deleteVlan.CallUnary(ctx, req)
 }
 
+// SetRstp calls schema.v1.SwitchService.SetRstp.
+func (c *switchServiceClient) SetRstp(ctx context.Context, req *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error) {
+	return c.setRstp.CallUnary(ctx, req)
+}
+
+// SetRstpPort calls schema.v1.SwitchService.SetRstpPort.
+func (c *switchServiceClient) SetRstpPort(ctx context.Context, req *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error) {
+	return c.setRstpPort.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -142,6 +173,8 @@ type SwitchServiceHandler interface {
 	SetPortConfig(context.Context, *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error)
 	SetVlan(context.Context, *connect.Request[v1.SetVlanRequest]) (*connect.Response[v1.SetVlanResponse], error)
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
+	SetRstp(context.Context, *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error)
+	SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -181,6 +214,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("DeleteVlan")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetRstpHandler := connect.NewUnaryHandler(
+		SwitchServiceSetRstpProcedure,
+		svc.SetRstp,
+		connect.WithSchema(switchServiceMethods.ByName("SetRstp")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceSetRstpPortHandler := connect.NewUnaryHandler(
+		SwitchServiceSetRstpPortProcedure,
+		svc.SetRstpPort,
+		connect.WithSchema(switchServiceMethods.ByName("SetRstpPort")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -193,6 +238,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetVlanHandler.ServeHTTP(w, r)
 		case SwitchServiceDeleteVlanProcedure:
 			switchServiceDeleteVlanHandler.ServeHTTP(w, r)
+		case SwitchServiceSetRstpProcedure:
+			switchServiceSetRstpHandler.ServeHTTP(w, r)
+		case SwitchServiceSetRstpPortProcedure:
+			switchServiceSetRstpPortHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -220,4 +269,12 @@ func (UnimplementedSwitchServiceHandler) SetVlan(context.Context, *connect.Reque
 
 func (UnimplementedSwitchServiceHandler) DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteVlan is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetRstp(context.Context, *connect.Request[v1.SetRstpRequest]) (*connect.Response[v1.SetRstpResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetRstp is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetRstpPort(context.Context, *connect.Request[v1.SetRstpPortRequest]) (*connect.Response[v1.SetRstpPortResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetRstpPort is not implemented"))
 }
