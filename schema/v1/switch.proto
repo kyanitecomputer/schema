@@ -438,6 +438,20 @@ message SetQosPortRequest {
   QosPort config = 2;
 }
 
+// SetMirrorRequest creates or replaces a mirror (SPAN) session, keyed by its id.
+// Port mirroring has no stable OpenConfig model, so Vein maps this to a vendor
+// augmentation.
+message SetMirrorRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  MirrorSession session = 2;
+}
+
+// DeleteMirrorRequest removes a mirror session by id.
+message DeleteMirrorRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 id = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -489,6 +503,14 @@ message SetQosPortResponse {
   SwitchDetail detail = 1;
 }
 
+message SetMirrorResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteMirrorResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -505,4 +527,6 @@ service SwitchService {
   rpc SetStormControl(SetStormControlRequest) returns (SetStormControlResponse);
   rpc SetQos(SetQosRequest) returns (SetQosResponse);
   rpc SetQosPort(SetQosPortRequest) returns (SetQosPortResponse);
+  rpc SetMirror(SetMirrorRequest) returns (SetMirrorResponse);
+  rpc DeleteMirror(DeleteMirrorRequest) returns (DeleteMirrorResponse);
 }
