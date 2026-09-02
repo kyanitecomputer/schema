@@ -21471,6 +21471,165 @@ impl ::buffa::ExtensionSet for DeleteLagRequest {
         &mut self.__buffa_unknown_fields
     }
 }
+/// SetIgmpRequest sets the switch-wide IGMP-snooping configuration, aligned with
+/// the openconfig igmp-snooping config container. The snooped groups reported in
+/// IgmpSnoopingConfig are learned state and stay read-only.
+#[derive(Clone, PartialEq, Default)]
+pub struct SetIgmpRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `enabled`
+    pub enabled: bool,
+    /// Field 3: `querier_interval_seconds`
+    pub querier_interval_seconds: u32,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetIgmpRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetIgmpRequest")
+            .field("node_id", &self.node_id)
+            .field("enabled", &self.enabled)
+            .field("querier_interval_seconds", &self.querier_interval_seconds)
+            .finish()
+    }
+}
+impl SetIgmpRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpRequest";
+}
+impl ::buffa::DefaultInstance for SetIgmpRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetIgmpRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetIgmpRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetIgmpRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetIgmpRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpRequest";
+}
+impl ::buffa::Message for SetIgmpRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.enabled {
+            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+        }
+        if self.querier_interval_seconds != 0u32 {
+            size
+                += 1u32
+                    + ::buffa::types::uint32_encoded_len(self.querier_interval_seconds)
+                        as u32;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.enabled {
+            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
+                .encode(buf);
+            ::buffa::types::encode_bool(self.enabled, buf);
+        }
+        if self.querier_interval_seconds != 0u32 {
+            ::buffa::encoding::Tag::new(3u32, ::buffa::encoding::WireType::Varint)
+                .encode(buf);
+            ::buffa::types::encode_uint32(self.querier_interval_seconds, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.enabled = ::buffa::types::decode_bool(buf)?;
+            }
+            3u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 3u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.querier_interval_seconds = ::buffa::types::decode_uint32(buf)?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.enabled = false;
+        self.querier_interval_seconds = 0u32;
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetIgmpRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetIgmpRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
 /// Each mutation returns the full switch detail so the client re-renders
 /// authoritative state in one round trip. buf requires a distinct response type
 /// per RPC.
@@ -22403,6 +22562,123 @@ impl ::buffa::Message for DeleteLagResponse {
 }
 impl ::buffa::ExtensionSet for DeleteLagResponse {
     const PROTO_FQN: &'static str = "schema.v1.DeleteLagResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetIgmpResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetIgmpResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetIgmpResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetIgmpResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpResponse";
+}
+impl ::buffa::DefaultInstance for SetIgmpResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetIgmpResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetIgmpResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetIgmpResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetIgmpResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpResponse";
+}
+impl ::buffa::Message for SetIgmpResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetIgmpResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetIgmpResponse";
     fn unknown_fields(&self) -> &::buffa::UnknownFields {
         &self.__buffa_unknown_fields
     }
@@ -65212,6 +65488,336 @@ pub mod __buffa {
             type View<'a> = DeleteLagRequestView<'a>;
             type ViewHandle = DeleteLagRequestOwnedView;
         }
+        /// SetIgmpRequest sets the switch-wide IGMP-snooping configuration, aligned with
+        /// the openconfig igmp-snooping config container. The snooped groups reported in
+        /// IgmpSnoopingConfig are learned state and stay read-only.
+        #[derive(Clone, Debug, Default)]
+        pub struct SetIgmpRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `enabled`
+            pub enabled: bool,
+            /// Field 3: `querier_interval_seconds`
+            pub querier_interval_seconds: u32,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetIgmpRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.enabled = ::buffa::types::decode_bool(&mut cur)?;
+                        }
+                        3u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 3u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.querier_interval_seconds = ::buffa::types::decode_uint32(
+                                &mut cur,
+                            )?;
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetIgmpRequestView<'a> {
+            type Owned = super::super::SetIgmpRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetIgmpRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetIgmpRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetIgmpRequest {
+                    node_id: self.node_id.to_string(),
+                    enabled: self.enabled,
+                    querier_interval_seconds: self.querier_interval_seconds,
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetIgmpRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.enabled {
+                    size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+                }
+                if self.querier_interval_seconds != 0u32 {
+                    size
+                        += 1u32
+                            + ::buffa::types::uint32_encoded_len(
+                                self.querier_interval_seconds,
+                            ) as u32;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.enabled {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::Varint,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_bool(self.enabled, buf);
+                }
+                if self.querier_interval_seconds != 0u32 {
+                    ::buffa::encoding::Tag::new(
+                            3u32,
+                            ::buffa::encoding::WireType::Varint,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_uint32(self.querier_interval_seconds, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetIgmpRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetIgmpRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetIgmpRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetIgmpRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<SetIgmpRequestView<'static>> = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetIgmpRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetIgmpRequestView<'static> {
+            type Reborrowed<'b> = SetIgmpRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetIgmpRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetIgmpRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetIgmpRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetIgmpRequestOwnedView(
+            ::buffa::OwnedView<SetIgmpRequestView<'static>>,
+        );
+        impl SetIgmpRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetIgmpRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpRequestOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetIgmpRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetIgmpRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetIgmpRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `enabled`
+            #[must_use]
+            pub fn enabled(&self) -> bool {
+                self.0.reborrow().enabled
+            }
+            /// Field 3: `querier_interval_seconds`
+            #[must_use]
+            pub fn querier_interval_seconds(&self) -> u32 {
+                self.0.reborrow().querier_interval_seconds
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetIgmpRequestView<'static>>>
+        for SetIgmpRequestOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetIgmpRequestView<'static>>) -> Self {
+                SetIgmpRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetIgmpRequestOwnedView>
+        for ::buffa::OwnedView<SetIgmpRequestView<'static>> {
+            fn from(wrapper: SetIgmpRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetIgmpRequestView<'static>>>
+        for SetIgmpRequestOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetIgmpRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetIgmpRequest {
+            type View<'a> = SetIgmpRequestView<'a>;
+            type ViewHandle = SetIgmpRequestOwnedView;
+        }
         /// Each mutation returns the full switch detail so the client re-renders
         /// authoritative state in one round trip. buf requires a distinct response type
         /// per RPC.
@@ -67589,6 +68195,302 @@ pub mod __buffa {
         impl ::buffa::HasMessageView for super::super::DeleteLagResponse {
             type View<'a> = DeleteLagResponseView<'a>;
             type ViewHandle = DeleteLagResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetIgmpResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetIgmpResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetIgmpResponseView<'a> {
+            type Owned = super::super::SetIgmpResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetIgmpResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetIgmpResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetIgmpResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetIgmpResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetIgmpResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetIgmpResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetIgmpResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetIgmpResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetIgmpResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetIgmpResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetIgmpResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetIgmpResponseView<'static> {
+            type Reborrowed<'b> = SetIgmpResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetIgmpResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetIgmpResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetIgmpResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetIgmpResponseOwnedView(
+            ::buffa::OwnedView<SetIgmpResponseView<'static>>,
+        );
+        impl SetIgmpResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetIgmpResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetIgmpResponseOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetIgmpResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetIgmpResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetIgmpResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetIgmpResponseView<'static>>>
+        for SetIgmpResponseOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetIgmpResponseView<'static>>) -> Self {
+                SetIgmpResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetIgmpResponseOwnedView>
+        for ::buffa::OwnedView<SetIgmpResponseView<'static>> {
+            fn from(wrapper: SetIgmpResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetIgmpResponseView<'static>>>
+        for SetIgmpResponseOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetIgmpResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetIgmpResponse {
+            type View<'a> = SetIgmpResponseView<'a>;
+            type ViewHandle = SetIgmpResponseOwnedView;
         }
         /// ManagedSystem is the normalized, Redfish-derived detail view of one managed
         /// entity: a Redfish ComputerSystem/Chassis for BMC/RMC-attached hosts, or the
@@ -70807,6 +71709,10 @@ pub use self::__buffa::view::DeleteLagRequestView;
 #[doc(inline)]
 pub use self::__buffa::view::DeleteLagRequestOwnedView;
 #[doc(inline)]
+pub use self::__buffa::view::SetIgmpRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetIgmpRequestOwnedView;
+#[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseOwnedView;
@@ -70838,6 +71744,10 @@ pub use self::__buffa::view::SetLagResponseOwnedView;
 pub use self::__buffa::view::DeleteLagResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::DeleteLagResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetIgmpResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetIgmpResponseOwnedView;
 #[doc(inline)]
 pub use self::__buffa::view::ManagedSystemView;
 #[doc(inline)]
