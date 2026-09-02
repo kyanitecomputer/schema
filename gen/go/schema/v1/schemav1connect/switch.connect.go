@@ -65,6 +65,11 @@ const (
 	// SwitchServiceSetQosPortProcedure is the fully-qualified name of the SwitchService's SetQosPort
 	// RPC.
 	SwitchServiceSetQosPortProcedure = "/schema.v1.SwitchService/SetQosPort"
+	// SwitchServiceSetMirrorProcedure is the fully-qualified name of the SwitchService's SetMirror RPC.
+	SwitchServiceSetMirrorProcedure = "/schema.v1.SwitchService/SetMirror"
+	// SwitchServiceDeleteMirrorProcedure is the fully-qualified name of the SwitchService's
+	// DeleteMirror RPC.
+	SwitchServiceDeleteMirrorProcedure = "/schema.v1.SwitchService/DeleteMirror"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -82,6 +87,8 @@ type SwitchServiceClient interface {
 	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
 	SetQos(context.Context, *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error)
 	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
+	SetMirror(context.Context, *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error)
+	DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -173,6 +180,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetQosPort")),
 			connect.WithClientOptions(opts...),
 		),
+		setMirror: connect.NewClient[v1.SetMirrorRequest, v1.SetMirrorResponse](
+			httpClient,
+			baseURL+SwitchServiceSetMirrorProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetMirror")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteMirror: connect.NewClient[v1.DeleteMirrorRequest, v1.DeleteMirrorResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteMirrorProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteMirror")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -191,6 +210,8 @@ type switchServiceClient struct {
 	setStormControl *connect.Client[v1.SetStormControlRequest, v1.SetStormControlResponse]
 	setQos          *connect.Client[v1.SetQosRequest, v1.SetQosResponse]
 	setQosPort      *connect.Client[v1.SetQosPortRequest, v1.SetQosPortResponse]
+	setMirror       *connect.Client[v1.SetMirrorRequest, v1.SetMirrorResponse]
+	deleteMirror    *connect.Client[v1.DeleteMirrorRequest, v1.DeleteMirrorResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -258,6 +279,16 @@ func (c *switchServiceClient) SetQosPort(ctx context.Context, req *connect.Reque
 	return c.setQosPort.CallUnary(ctx, req)
 }
 
+// SetMirror calls schema.v1.SwitchService.SetMirror.
+func (c *switchServiceClient) SetMirror(ctx context.Context, req *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error) {
+	return c.setMirror.CallUnary(ctx, req)
+}
+
+// DeleteMirror calls schema.v1.SwitchService.DeleteMirror.
+func (c *switchServiceClient) DeleteMirror(ctx context.Context, req *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error) {
+	return c.deleteMirror.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -273,6 +304,8 @@ type SwitchServiceHandler interface {
 	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
 	SetQos(context.Context, *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error)
 	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
+	SetMirror(context.Context, *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error)
+	DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -360,6 +393,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetQosPort")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetMirrorHandler := connect.NewUnaryHandler(
+		SwitchServiceSetMirrorProcedure,
+		svc.SetMirror,
+		connect.WithSchema(switchServiceMethods.ByName("SetMirror")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteMirrorHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteMirrorProcedure,
+		svc.DeleteMirror,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteMirror")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -388,6 +433,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetQosHandler.ServeHTTP(w, r)
 		case SwitchServiceSetQosPortProcedure:
 			switchServiceSetQosPortHandler.ServeHTTP(w, r)
+		case SwitchServiceSetMirrorProcedure:
+			switchServiceSetMirrorHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteMirrorProcedure:
+			switchServiceDeleteMirrorHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -447,4 +496,12 @@ func (UnimplementedSwitchServiceHandler) SetQos(context.Context, *connect.Reques
 
 func (UnimplementedSwitchServiceHandler) SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetQosPort is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetMirror(context.Context, *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetMirror is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteMirror is not implemented"))
 }
