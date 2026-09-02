@@ -369,6 +369,25 @@ message DeleteVlanRequest {
   }];
 }
 
+// SetRstpRequest sets the bridge-level Rapid Spanning Tree (802.1w)
+// configuration. It aligns with the openconfig-spanning-tree stp/rstp/config
+// container. The elected root_bridge and the per-port role/state reported in
+// RstpConfig stay read-only operational state.
+message SetRstpRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  bool enabled = 2;
+  // Bridge priority in 4096 steps (0..61440).
+  uint32 bridge_priority = 3 [(buf.validate.field).uint32.lte = 61440];
+}
+
+// SetRstpPortRequest sets one port's RSTP path cost, mirroring the
+// openconfig-spanning-tree stp/rstp/interfaces/interface/config cost leaf.
+message SetRstpPortRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 port = 2;
+  uint32 path_cost = 3;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -388,6 +407,14 @@ message DeleteVlanResponse {
   SwitchDetail detail = 1;
 }
 
+message SetRstpResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetRstpPortResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -396,4 +423,6 @@ service SwitchService {
   rpc SetPortConfig(SetPortConfigRequest) returns (SetPortConfigResponse);
   rpc SetVlan(SetVlanRequest) returns (SetVlanResponse);
   rpc DeleteVlan(DeleteVlanRequest) returns (DeleteVlanResponse);
+  rpc SetRstp(SetRstpRequest) returns (SetRstpResponse);
+  rpc SetRstpPort(SetRstpPortRequest) returns (SetRstpPortResponse);
 }
