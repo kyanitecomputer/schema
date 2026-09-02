@@ -60,6 +60,11 @@ const (
 	// SwitchServiceSetStormControlProcedure is the fully-qualified name of the SwitchService's
 	// SetStormControl RPC.
 	SwitchServiceSetStormControlProcedure = "/schema.v1.SwitchService/SetStormControl"
+	// SwitchServiceSetQosProcedure is the fully-qualified name of the SwitchService's SetQos RPC.
+	SwitchServiceSetQosProcedure = "/schema.v1.SwitchService/SetQos"
+	// SwitchServiceSetQosPortProcedure is the fully-qualified name of the SwitchService's SetQosPort
+	// RPC.
+	SwitchServiceSetQosPortProcedure = "/schema.v1.SwitchService/SetQosPort"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -75,6 +80,8 @@ type SwitchServiceClient interface {
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
 	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
+	SetQos(context.Context, *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error)
+	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -154,6 +161,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetStormControl")),
 			connect.WithClientOptions(opts...),
 		),
+		setQos: connect.NewClient[v1.SetQosRequest, v1.SetQosResponse](
+			httpClient,
+			baseURL+SwitchServiceSetQosProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetQos")),
+			connect.WithClientOptions(opts...),
+		),
+		setQosPort: connect.NewClient[v1.SetQosPortRequest, v1.SetQosPortResponse](
+			httpClient,
+			baseURL+SwitchServiceSetQosPortProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetQosPort")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -170,6 +189,8 @@ type switchServiceClient struct {
 	deleteLag       *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
 	setIgmp         *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
 	setStormControl *connect.Client[v1.SetStormControlRequest, v1.SetStormControlResponse]
+	setQos          *connect.Client[v1.SetQosRequest, v1.SetQosResponse]
+	setQosPort      *connect.Client[v1.SetQosPortRequest, v1.SetQosPortResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -227,6 +248,16 @@ func (c *switchServiceClient) SetStormControl(ctx context.Context, req *connect.
 	return c.setStormControl.CallUnary(ctx, req)
 }
 
+// SetQos calls schema.v1.SwitchService.SetQos.
+func (c *switchServiceClient) SetQos(ctx context.Context, req *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error) {
+	return c.setQos.CallUnary(ctx, req)
+}
+
+// SetQosPort calls schema.v1.SwitchService.SetQosPort.
+func (c *switchServiceClient) SetQosPort(ctx context.Context, req *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error) {
+	return c.setQosPort.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -240,6 +271,8 @@ type SwitchServiceHandler interface {
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
 	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
+	SetQos(context.Context, *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error)
+	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -315,6 +348,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetStormControl")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetQosHandler := connect.NewUnaryHandler(
+		SwitchServiceSetQosProcedure,
+		svc.SetQos,
+		connect.WithSchema(switchServiceMethods.ByName("SetQos")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceSetQosPortHandler := connect.NewUnaryHandler(
+		SwitchServiceSetQosPortProcedure,
+		svc.SetQosPort,
+		connect.WithSchema(switchServiceMethods.ByName("SetQosPort")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -339,6 +384,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetIgmpHandler.ServeHTTP(w, r)
 		case SwitchServiceSetStormControlProcedure:
 			switchServiceSetStormControlHandler.ServeHTTP(w, r)
+		case SwitchServiceSetQosProcedure:
+			switchServiceSetQosHandler.ServeHTTP(w, r)
+		case SwitchServiceSetQosPortProcedure:
+			switchServiceSetQosPortHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -390,4 +439,12 @@ func (UnimplementedSwitchServiceHandler) SetIgmp(context.Context, *connect.Reque
 
 func (UnimplementedSwitchServiceHandler) SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetStormControl is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetQos(context.Context, *connect.Request[v1.SetQosRequest]) (*connect.Response[v1.SetQosResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetQos is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetQosPort is not implemented"))
 }
