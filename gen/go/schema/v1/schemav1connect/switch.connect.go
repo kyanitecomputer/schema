@@ -57,6 +57,9 @@ const (
 	SwitchServiceDeleteLagProcedure = "/schema.v1.SwitchService/DeleteLag"
 	// SwitchServiceSetIgmpProcedure is the fully-qualified name of the SwitchService's SetIgmp RPC.
 	SwitchServiceSetIgmpProcedure = "/schema.v1.SwitchService/SetIgmp"
+	// SwitchServiceSetStormControlProcedure is the fully-qualified name of the SwitchService's
+	// SetStormControl RPC.
+	SwitchServiceSetStormControlProcedure = "/schema.v1.SwitchService/SetStormControl"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -71,6 +74,7 @@ type SwitchServiceClient interface {
 	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
+	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -144,21 +148,28 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetIgmp")),
 			connect.WithClientOptions(opts...),
 		),
+		setStormControl: connect.NewClient[v1.SetStormControlRequest, v1.SetStormControlResponse](
+			httpClient,
+			baseURL+SwitchServiceSetStormControlProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetStormControl")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // switchServiceClient implements SwitchServiceClient.
 type switchServiceClient struct {
-	getSwitch     *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
-	setPortAdmin  *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
-	setPortConfig *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
-	setVlan       *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
-	deleteVlan    *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
-	setRstp       *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
-	setRstpPort   *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
-	setLag        *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
-	deleteLag     *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
-	setIgmp       *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
+	getSwitch       *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
+	setPortAdmin    *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
+	setPortConfig   *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
+	setVlan         *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
+	deleteVlan      *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
+	setRstp         *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
+	setRstpPort     *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
+	setLag          *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
+	deleteLag       *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
+	setIgmp         *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
+	setStormControl *connect.Client[v1.SetStormControlRequest, v1.SetStormControlResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -211,6 +222,11 @@ func (c *switchServiceClient) SetIgmp(ctx context.Context, req *connect.Request[
 	return c.setIgmp.CallUnary(ctx, req)
 }
 
+// SetStormControl calls schema.v1.SwitchService.SetStormControl.
+func (c *switchServiceClient) SetStormControl(ctx context.Context, req *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error) {
+	return c.setStormControl.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -223,6 +239,7 @@ type SwitchServiceHandler interface {
 	SetLag(context.Context, *connect.Request[v1.SetLagRequest]) (*connect.Response[v1.SetLagResponse], error)
 	DeleteLag(context.Context, *connect.Request[v1.DeleteLagRequest]) (*connect.Response[v1.DeleteLagResponse], error)
 	SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error)
+	SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -292,6 +309,12 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetIgmp")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetStormControlHandler := connect.NewUnaryHandler(
+		SwitchServiceSetStormControlProcedure,
+		svc.SetStormControl,
+		connect.WithSchema(switchServiceMethods.ByName("SetStormControl")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -314,6 +337,8 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceDeleteLagHandler.ServeHTTP(w, r)
 		case SwitchServiceSetIgmpProcedure:
 			switchServiceSetIgmpHandler.ServeHTTP(w, r)
+		case SwitchServiceSetStormControlProcedure:
+			switchServiceSetStormControlHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -361,4 +386,8 @@ func (UnimplementedSwitchServiceHandler) DeleteLag(context.Context, *connect.Req
 
 func (UnimplementedSwitchServiceHandler) SetIgmp(context.Context, *connect.Request[v1.SetIgmpRequest]) (*connect.Response[v1.SetIgmpResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetIgmp is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetStormControl(context.Context, *connect.Request[v1.SetStormControlRequest]) (*connect.Response[v1.SetStormControlResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetStormControl is not implemented"))
 }

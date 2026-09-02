@@ -2963,6 +2963,63 @@ func (x *SetIgmpRequest) GetQuerierIntervalSeconds() uint32 {
 	return 0
 }
 
+// SetStormControlRequest sets one port's storm-control rate limits (broadcast,
+// multicast and unknown-unicast, in packets-per-second; 0 disables a limit),
+// keyed by the port index inside config. Storm control has no stable OpenConfig
+// model, so Vein maps this to a vendor augmentation of the interface's ethernet
+// config.
+type SetStormControlRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	Config        *StormControlPort      `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetStormControlRequest) Reset() {
+	*x = SetStormControlRequest{}
+	mi := &file_schema_v1_switch_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetStormControlRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetStormControlRequest) ProtoMessage() {}
+
+func (x *SetStormControlRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetStormControlRequest.ProtoReflect.Descriptor instead.
+func (*SetStormControlRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *SetStormControlRequest) GetNodeId() string {
+	if x != nil {
+		return x.NodeId
+	}
+	return ""
+}
+
+func (x *SetStormControlRequest) GetConfig() *StormControlPort {
+	if x != nil {
+		return x.Config
+	}
+	return nil
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -2975,7 +3032,7 @@ type SetPortAdminResponse struct {
 
 func (x *SetPortAdminResponse) Reset() {
 	*x = SetPortAdminResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[32]
+	mi := &file_schema_v1_switch_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2987,7 +3044,7 @@ func (x *SetPortAdminResponse) String() string {
 func (*SetPortAdminResponse) ProtoMessage() {}
 
 func (x *SetPortAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[32]
+	mi := &file_schema_v1_switch_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3000,7 +3057,7 @@ func (x *SetPortAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPortAdminResponse.ProtoReflect.Descriptor instead.
 func (*SetPortAdminResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{32}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *SetPortAdminResponse) GetDetail() *SwitchDetail {
@@ -3019,7 +3076,7 @@ type SetPortConfigResponse struct {
 
 func (x *SetPortConfigResponse) Reset() {
 	*x = SetPortConfigResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[33]
+	mi := &file_schema_v1_switch_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3031,7 +3088,7 @@ func (x *SetPortConfigResponse) String() string {
 func (*SetPortConfigResponse) ProtoMessage() {}
 
 func (x *SetPortConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[33]
+	mi := &file_schema_v1_switch_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3044,7 +3101,7 @@ func (x *SetPortConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPortConfigResponse.ProtoReflect.Descriptor instead.
 func (*SetPortConfigResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{33}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *SetPortConfigResponse) GetDetail() *SwitchDetail {
@@ -3063,7 +3120,7 @@ type SetVlanResponse struct {
 
 func (x *SetVlanResponse) Reset() {
 	*x = SetVlanResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[34]
+	mi := &file_schema_v1_switch_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3075,7 +3132,7 @@ func (x *SetVlanResponse) String() string {
 func (*SetVlanResponse) ProtoMessage() {}
 
 func (x *SetVlanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[34]
+	mi := &file_schema_v1_switch_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3088,7 +3145,7 @@ func (x *SetVlanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetVlanResponse.ProtoReflect.Descriptor instead.
 func (*SetVlanResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{34}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *SetVlanResponse) GetDetail() *SwitchDetail {
@@ -3107,7 +3164,7 @@ type DeleteVlanResponse struct {
 
 func (x *DeleteVlanResponse) Reset() {
 	*x = DeleteVlanResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[35]
+	mi := &file_schema_v1_switch_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3119,7 +3176,7 @@ func (x *DeleteVlanResponse) String() string {
 func (*DeleteVlanResponse) ProtoMessage() {}
 
 func (x *DeleteVlanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[35]
+	mi := &file_schema_v1_switch_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3132,7 +3189,7 @@ func (x *DeleteVlanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteVlanResponse.ProtoReflect.Descriptor instead.
 func (*DeleteVlanResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{35}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *DeleteVlanResponse) GetDetail() *SwitchDetail {
@@ -3151,7 +3208,7 @@ type SetRstpResponse struct {
 
 func (x *SetRstpResponse) Reset() {
 	*x = SetRstpResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[36]
+	mi := &file_schema_v1_switch_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3163,7 +3220,7 @@ func (x *SetRstpResponse) String() string {
 func (*SetRstpResponse) ProtoMessage() {}
 
 func (x *SetRstpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[36]
+	mi := &file_schema_v1_switch_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3176,7 +3233,7 @@ func (x *SetRstpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRstpResponse.ProtoReflect.Descriptor instead.
 func (*SetRstpResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{36}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *SetRstpResponse) GetDetail() *SwitchDetail {
@@ -3195,7 +3252,7 @@ type SetRstpPortResponse struct {
 
 func (x *SetRstpPortResponse) Reset() {
 	*x = SetRstpPortResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[37]
+	mi := &file_schema_v1_switch_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3207,7 +3264,7 @@ func (x *SetRstpPortResponse) String() string {
 func (*SetRstpPortResponse) ProtoMessage() {}
 
 func (x *SetRstpPortResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[37]
+	mi := &file_schema_v1_switch_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3220,7 +3277,7 @@ func (x *SetRstpPortResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRstpPortResponse.ProtoReflect.Descriptor instead.
 func (*SetRstpPortResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{37}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *SetRstpPortResponse) GetDetail() *SwitchDetail {
@@ -3239,7 +3296,7 @@ type SetLagResponse struct {
 
 func (x *SetLagResponse) Reset() {
 	*x = SetLagResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[38]
+	mi := &file_schema_v1_switch_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3251,7 +3308,7 @@ func (x *SetLagResponse) String() string {
 func (*SetLagResponse) ProtoMessage() {}
 
 func (x *SetLagResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[38]
+	mi := &file_schema_v1_switch_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3264,7 +3321,7 @@ func (x *SetLagResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetLagResponse.ProtoReflect.Descriptor instead.
 func (*SetLagResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{38}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *SetLagResponse) GetDetail() *SwitchDetail {
@@ -3283,7 +3340,7 @@ type DeleteLagResponse struct {
 
 func (x *DeleteLagResponse) Reset() {
 	*x = DeleteLagResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[39]
+	mi := &file_schema_v1_switch_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3295,7 +3352,7 @@ func (x *DeleteLagResponse) String() string {
 func (*DeleteLagResponse) ProtoMessage() {}
 
 func (x *DeleteLagResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[39]
+	mi := &file_schema_v1_switch_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3308,7 +3365,7 @@ func (x *DeleteLagResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteLagResponse.ProtoReflect.Descriptor instead.
 func (*DeleteLagResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{39}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *DeleteLagResponse) GetDetail() *SwitchDetail {
@@ -3327,7 +3384,7 @@ type SetIgmpResponse struct {
 
 func (x *SetIgmpResponse) Reset() {
 	*x = SetIgmpResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[40]
+	mi := &file_schema_v1_switch_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3339,7 +3396,7 @@ func (x *SetIgmpResponse) String() string {
 func (*SetIgmpResponse) ProtoMessage() {}
 
 func (x *SetIgmpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[40]
+	mi := &file_schema_v1_switch_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3352,10 +3409,54 @@ func (x *SetIgmpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetIgmpResponse.ProtoReflect.Descriptor instead.
 func (*SetIgmpResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{40}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *SetIgmpResponse) GetDetail() *SwitchDetail {
+	if x != nil {
+		return x.Detail
+	}
+	return nil
+}
+
+type SetStormControlResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Detail        *SwitchDetail          `protobuf:"bytes,1,opt,name=detail,proto3" json:"detail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetStormControlResponse) Reset() {
+	*x = SetStormControlResponse{}
+	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetStormControlResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetStormControlResponse) ProtoMessage() {}
+
+func (x *SetStormControlResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetStormControlResponse.ProtoReflect.Descriptor instead.
+func (*SetStormControlResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *SetStormControlResponse) GetDetail() *SwitchDetail {
 	if x != nil {
 		return x.Detail
 	}
@@ -3536,7 +3637,10 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\x0eSetIgmpRequest\x12 \n" +
 	"\anode_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06nodeId\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\x128\n" +
-	"\x18querier_interval_seconds\x18\x03 \x01(\rR\x16querierIntervalSeconds\"G\n" +
+	"\x18querier_interval_seconds\x18\x03 \x01(\rR\x16querierIntervalSeconds\"o\n" +
+	"\x16SetStormControlRequest\x12 \n" +
+	"\anode_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06nodeId\x123\n" +
+	"\x06config\x18\x02 \x01(\v2\x1b.schema.v1.StormControlPortR\x06config\"G\n" +
 	"\x14SetPortAdminResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"H\n" +
 	"\x15SetPortConfigResponse\x12/\n" +
@@ -3554,6 +3658,8 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\x11DeleteLagResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"B\n" +
 	"\x0fSetIgmpResponse\x12/\n" +
+	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"J\n" +
+	"\x17SetStormControlResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail*\x87\x01\n" +
 	"\tPortMedia\x12\x1a\n" +
 	"\x16PORT_MEDIA_UNSPECIFIED\x10\x00\x12\x16\n" +
@@ -3624,7 +3730,7 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\x1fSNMP_SECURITY_LEVEL_UNSPECIFIED\x10\x00\x12'\n" +
 	"#SNMP_SECURITY_LEVEL_NO_AUTH_NO_PRIV\x10\x01\x12$\n" +
 	" SNMP_SECURITY_LEVEL_AUTH_NO_PRIV\x10\x02\x12!\n" +
-	"\x1dSNMP_SECURITY_LEVEL_AUTH_PRIV\x10\x032\xe2\x05\n" +
+	"\x1dSNMP_SECURITY_LEVEL_AUTH_PRIV\x10\x032\xbc\x06\n" +
 	"\rSwitchService\x12F\n" +
 	"\tGetSwitch\x12\x1b.schema.v1.GetSwitchRequest\x1a\x1c.schema.v1.GetSwitchResponse\x12O\n" +
 	"\fSetPortAdmin\x12\x1e.schema.v1.SetPortAdminRequest\x1a\x1f.schema.v1.SetPortAdminResponse\x12R\n" +
@@ -3636,7 +3742,8 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\vSetRstpPort\x12\x1d.schema.v1.SetRstpPortRequest\x1a\x1e.schema.v1.SetRstpPortResponse\x12=\n" +
 	"\x06SetLag\x12\x18.schema.v1.SetLagRequest\x1a\x19.schema.v1.SetLagResponse\x12F\n" +
 	"\tDeleteLag\x12\x1b.schema.v1.DeleteLagRequest\x1a\x1c.schema.v1.DeleteLagResponse\x12@\n" +
-	"\aSetIgmp\x12\x19.schema.v1.SetIgmpRequest\x1a\x1a.schema.v1.SetIgmpResponseB\x98\x01\n" +
+	"\aSetIgmp\x12\x19.schema.v1.SetIgmpRequest\x1a\x1a.schema.v1.SetIgmpResponse\x12X\n" +
+	"\x0fSetStormControl\x12!.schema.v1.SetStormControlRequest\x1a\".schema.v1.SetStormControlResponseB\x98\x01\n" +
 	"\rcom.schema.v1B\vSwitchProtoP\x01Z5src.kyanite.computer/schema/gen/go/schema/v1;schemav1\xa2\x02\x03SXX\xaa\x02\tSchema.V1\xca\x02\tSchema\\V1\xe2\x02\x15Schema\\V1\\GPBMetadata\xea\x02\n" +
 	"Schema::V1b\x06proto3"
 
@@ -3653,63 +3760,65 @@ func file_schema_v1_switch_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_v1_switch_proto_enumTypes = make([]protoimpl.EnumInfo, 14)
-var file_schema_v1_switch_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
+var file_schema_v1_switch_proto_msgTypes = make([]protoimpl.MessageInfo, 43)
 var file_schema_v1_switch_proto_goTypes = []any{
-	(PortMedia)(0),                // 0: schema.v1.PortMedia
-	(LinkState)(0),                // 1: schema.v1.LinkState
-	(StpPortRole)(0),              // 2: schema.v1.StpPortRole
-	(StpPortState)(0),             // 3: schema.v1.StpPortState
-	(LagMode)(0),                  // 4: schema.v1.LagMode
-	(QosTrustMode)(0),             // 5: schema.v1.QosTrustMode
-	(QosSchedulerMode)(0),         // 6: schema.v1.QosSchedulerMode
-	(MirrorDirection)(0),          // 7: schema.v1.MirrorDirection
-	(AclAction)(0),                // 8: schema.v1.AclAction
-	(AclRuleType)(0),              // 9: schema.v1.AclRuleType
-	(ErpsRingState)(0),            // 10: schema.v1.ErpsRingState
-	(Dot1XPortState)(0),           // 11: schema.v1.Dot1xPortState
-	(SnmpAccess)(0),               // 12: schema.v1.SnmpAccess
-	(SnmpSecurityLevel)(0),        // 13: schema.v1.SnmpSecurityLevel
-	(*SwitchPort)(nil),            // 14: schema.v1.SwitchPort
-	(*Vlan)(nil),                  // 15: schema.v1.Vlan
-	(*LldpNeighbor)(nil),          // 16: schema.v1.LldpNeighbor
-	(*StpPort)(nil),               // 17: schema.v1.StpPort
-	(*RstpConfig)(nil),            // 18: schema.v1.RstpConfig
-	(*LinkAggGroup)(nil),          // 19: schema.v1.LinkAggGroup
-	(*IgmpGroup)(nil),             // 20: schema.v1.IgmpGroup
-	(*IgmpSnoopingConfig)(nil),    // 21: schema.v1.IgmpSnoopingConfig
-	(*StormControlPort)(nil),      // 22: schema.v1.StormControlPort
-	(*QosPort)(nil),               // 23: schema.v1.QosPort
-	(*QosConfig)(nil),             // 24: schema.v1.QosConfig
-	(*MirrorSession)(nil),         // 25: schema.v1.MirrorSession
-	(*AclRule)(nil),               // 26: schema.v1.AclRule
-	(*ErpsRing)(nil),              // 27: schema.v1.ErpsRing
-	(*Dot1XPort)(nil),             // 28: schema.v1.Dot1xPort
-	(*Dot1XConfig)(nil),           // 29: schema.v1.Dot1xConfig
-	(*SnmpCommunity)(nil),         // 30: schema.v1.SnmpCommunity
-	(*SnmpV3User)(nil),            // 31: schema.v1.SnmpV3User
-	(*SnmpConfig)(nil),            // 32: schema.v1.SnmpConfig
-	(*SwitchInfo)(nil),            // 33: schema.v1.SwitchInfo
-	(*SwitchDetail)(nil),          // 34: schema.v1.SwitchDetail
-	(*GetSwitchRequest)(nil),      // 35: schema.v1.GetSwitchRequest
-	(*GetSwitchResponse)(nil),     // 36: schema.v1.GetSwitchResponse
-	(*SetPortAdminRequest)(nil),   // 37: schema.v1.SetPortAdminRequest
-	(*SetPortConfigRequest)(nil),  // 38: schema.v1.SetPortConfigRequest
-	(*SetVlanRequest)(nil),        // 39: schema.v1.SetVlanRequest
-	(*DeleteVlanRequest)(nil),     // 40: schema.v1.DeleteVlanRequest
-	(*SetRstpRequest)(nil),        // 41: schema.v1.SetRstpRequest
-	(*SetRstpPortRequest)(nil),    // 42: schema.v1.SetRstpPortRequest
-	(*SetLagRequest)(nil),         // 43: schema.v1.SetLagRequest
-	(*DeleteLagRequest)(nil),      // 44: schema.v1.DeleteLagRequest
-	(*SetIgmpRequest)(nil),        // 45: schema.v1.SetIgmpRequest
-	(*SetPortAdminResponse)(nil),  // 46: schema.v1.SetPortAdminResponse
-	(*SetPortConfigResponse)(nil), // 47: schema.v1.SetPortConfigResponse
-	(*SetVlanResponse)(nil),       // 48: schema.v1.SetVlanResponse
-	(*DeleteVlanResponse)(nil),    // 49: schema.v1.DeleteVlanResponse
-	(*SetRstpResponse)(nil),       // 50: schema.v1.SetRstpResponse
-	(*SetRstpPortResponse)(nil),   // 51: schema.v1.SetRstpPortResponse
-	(*SetLagResponse)(nil),        // 52: schema.v1.SetLagResponse
-	(*DeleteLagResponse)(nil),     // 53: schema.v1.DeleteLagResponse
-	(*SetIgmpResponse)(nil),       // 54: schema.v1.SetIgmpResponse
+	(PortMedia)(0),                  // 0: schema.v1.PortMedia
+	(LinkState)(0),                  // 1: schema.v1.LinkState
+	(StpPortRole)(0),                // 2: schema.v1.StpPortRole
+	(StpPortState)(0),               // 3: schema.v1.StpPortState
+	(LagMode)(0),                    // 4: schema.v1.LagMode
+	(QosTrustMode)(0),               // 5: schema.v1.QosTrustMode
+	(QosSchedulerMode)(0),           // 6: schema.v1.QosSchedulerMode
+	(MirrorDirection)(0),            // 7: schema.v1.MirrorDirection
+	(AclAction)(0),                  // 8: schema.v1.AclAction
+	(AclRuleType)(0),                // 9: schema.v1.AclRuleType
+	(ErpsRingState)(0),              // 10: schema.v1.ErpsRingState
+	(Dot1XPortState)(0),             // 11: schema.v1.Dot1xPortState
+	(SnmpAccess)(0),                 // 12: schema.v1.SnmpAccess
+	(SnmpSecurityLevel)(0),          // 13: schema.v1.SnmpSecurityLevel
+	(*SwitchPort)(nil),              // 14: schema.v1.SwitchPort
+	(*Vlan)(nil),                    // 15: schema.v1.Vlan
+	(*LldpNeighbor)(nil),            // 16: schema.v1.LldpNeighbor
+	(*StpPort)(nil),                 // 17: schema.v1.StpPort
+	(*RstpConfig)(nil),              // 18: schema.v1.RstpConfig
+	(*LinkAggGroup)(nil),            // 19: schema.v1.LinkAggGroup
+	(*IgmpGroup)(nil),               // 20: schema.v1.IgmpGroup
+	(*IgmpSnoopingConfig)(nil),      // 21: schema.v1.IgmpSnoopingConfig
+	(*StormControlPort)(nil),        // 22: schema.v1.StormControlPort
+	(*QosPort)(nil),                 // 23: schema.v1.QosPort
+	(*QosConfig)(nil),               // 24: schema.v1.QosConfig
+	(*MirrorSession)(nil),           // 25: schema.v1.MirrorSession
+	(*AclRule)(nil),                 // 26: schema.v1.AclRule
+	(*ErpsRing)(nil),                // 27: schema.v1.ErpsRing
+	(*Dot1XPort)(nil),               // 28: schema.v1.Dot1xPort
+	(*Dot1XConfig)(nil),             // 29: schema.v1.Dot1xConfig
+	(*SnmpCommunity)(nil),           // 30: schema.v1.SnmpCommunity
+	(*SnmpV3User)(nil),              // 31: schema.v1.SnmpV3User
+	(*SnmpConfig)(nil),              // 32: schema.v1.SnmpConfig
+	(*SwitchInfo)(nil),              // 33: schema.v1.SwitchInfo
+	(*SwitchDetail)(nil),            // 34: schema.v1.SwitchDetail
+	(*GetSwitchRequest)(nil),        // 35: schema.v1.GetSwitchRequest
+	(*GetSwitchResponse)(nil),       // 36: schema.v1.GetSwitchResponse
+	(*SetPortAdminRequest)(nil),     // 37: schema.v1.SetPortAdminRequest
+	(*SetPortConfigRequest)(nil),    // 38: schema.v1.SetPortConfigRequest
+	(*SetVlanRequest)(nil),          // 39: schema.v1.SetVlanRequest
+	(*DeleteVlanRequest)(nil),       // 40: schema.v1.DeleteVlanRequest
+	(*SetRstpRequest)(nil),          // 41: schema.v1.SetRstpRequest
+	(*SetRstpPortRequest)(nil),      // 42: schema.v1.SetRstpPortRequest
+	(*SetLagRequest)(nil),           // 43: schema.v1.SetLagRequest
+	(*DeleteLagRequest)(nil),        // 44: schema.v1.DeleteLagRequest
+	(*SetIgmpRequest)(nil),          // 45: schema.v1.SetIgmpRequest
+	(*SetStormControlRequest)(nil),  // 46: schema.v1.SetStormControlRequest
+	(*SetPortAdminResponse)(nil),    // 47: schema.v1.SetPortAdminResponse
+	(*SetPortConfigResponse)(nil),   // 48: schema.v1.SetPortConfigResponse
+	(*SetVlanResponse)(nil),         // 49: schema.v1.SetVlanResponse
+	(*DeleteVlanResponse)(nil),      // 50: schema.v1.DeleteVlanResponse
+	(*SetRstpResponse)(nil),         // 51: schema.v1.SetRstpResponse
+	(*SetRstpPortResponse)(nil),     // 52: schema.v1.SetRstpPortResponse
+	(*SetLagResponse)(nil),          // 53: schema.v1.SetLagResponse
+	(*DeleteLagResponse)(nil),       // 54: schema.v1.DeleteLagResponse
+	(*SetIgmpResponse)(nil),         // 55: schema.v1.SetIgmpResponse
+	(*SetStormControlResponse)(nil), // 56: schema.v1.SetStormControlResponse
 }
 var file_schema_v1_switch_proto_depIdxs = []int32{
 	0,  // 0: schema.v1.SwitchPort.media:type_name -> schema.v1.PortMedia
@@ -3749,40 +3858,44 @@ var file_schema_v1_switch_proto_depIdxs = []int32{
 	34, // 34: schema.v1.GetSwitchResponse.detail:type_name -> schema.v1.SwitchDetail
 	15, // 35: schema.v1.SetVlanRequest.vlan:type_name -> schema.v1.Vlan
 	19, // 36: schema.v1.SetLagRequest.lag:type_name -> schema.v1.LinkAggGroup
-	34, // 37: schema.v1.SetPortAdminResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 38: schema.v1.SetPortConfigResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 39: schema.v1.SetVlanResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 40: schema.v1.DeleteVlanResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 41: schema.v1.SetRstpResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 42: schema.v1.SetRstpPortResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 43: schema.v1.SetLagResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 44: schema.v1.DeleteLagResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 45: schema.v1.SetIgmpResponse.detail:type_name -> schema.v1.SwitchDetail
-	35, // 46: schema.v1.SwitchService.GetSwitch:input_type -> schema.v1.GetSwitchRequest
-	37, // 47: schema.v1.SwitchService.SetPortAdmin:input_type -> schema.v1.SetPortAdminRequest
-	38, // 48: schema.v1.SwitchService.SetPortConfig:input_type -> schema.v1.SetPortConfigRequest
-	39, // 49: schema.v1.SwitchService.SetVlan:input_type -> schema.v1.SetVlanRequest
-	40, // 50: schema.v1.SwitchService.DeleteVlan:input_type -> schema.v1.DeleteVlanRequest
-	41, // 51: schema.v1.SwitchService.SetRstp:input_type -> schema.v1.SetRstpRequest
-	42, // 52: schema.v1.SwitchService.SetRstpPort:input_type -> schema.v1.SetRstpPortRequest
-	43, // 53: schema.v1.SwitchService.SetLag:input_type -> schema.v1.SetLagRequest
-	44, // 54: schema.v1.SwitchService.DeleteLag:input_type -> schema.v1.DeleteLagRequest
-	45, // 55: schema.v1.SwitchService.SetIgmp:input_type -> schema.v1.SetIgmpRequest
-	36, // 56: schema.v1.SwitchService.GetSwitch:output_type -> schema.v1.GetSwitchResponse
-	46, // 57: schema.v1.SwitchService.SetPortAdmin:output_type -> schema.v1.SetPortAdminResponse
-	47, // 58: schema.v1.SwitchService.SetPortConfig:output_type -> schema.v1.SetPortConfigResponse
-	48, // 59: schema.v1.SwitchService.SetVlan:output_type -> schema.v1.SetVlanResponse
-	49, // 60: schema.v1.SwitchService.DeleteVlan:output_type -> schema.v1.DeleteVlanResponse
-	50, // 61: schema.v1.SwitchService.SetRstp:output_type -> schema.v1.SetRstpResponse
-	51, // 62: schema.v1.SwitchService.SetRstpPort:output_type -> schema.v1.SetRstpPortResponse
-	52, // 63: schema.v1.SwitchService.SetLag:output_type -> schema.v1.SetLagResponse
-	53, // 64: schema.v1.SwitchService.DeleteLag:output_type -> schema.v1.DeleteLagResponse
-	54, // 65: schema.v1.SwitchService.SetIgmp:output_type -> schema.v1.SetIgmpResponse
-	56, // [56:66] is the sub-list for method output_type
-	46, // [46:56] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	22, // 37: schema.v1.SetStormControlRequest.config:type_name -> schema.v1.StormControlPort
+	34, // 38: schema.v1.SetPortAdminResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 39: schema.v1.SetPortConfigResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 40: schema.v1.SetVlanResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 41: schema.v1.DeleteVlanResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 42: schema.v1.SetRstpResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 43: schema.v1.SetRstpPortResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 44: schema.v1.SetLagResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 45: schema.v1.DeleteLagResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 46: schema.v1.SetIgmpResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 47: schema.v1.SetStormControlResponse.detail:type_name -> schema.v1.SwitchDetail
+	35, // 48: schema.v1.SwitchService.GetSwitch:input_type -> schema.v1.GetSwitchRequest
+	37, // 49: schema.v1.SwitchService.SetPortAdmin:input_type -> schema.v1.SetPortAdminRequest
+	38, // 50: schema.v1.SwitchService.SetPortConfig:input_type -> schema.v1.SetPortConfigRequest
+	39, // 51: schema.v1.SwitchService.SetVlan:input_type -> schema.v1.SetVlanRequest
+	40, // 52: schema.v1.SwitchService.DeleteVlan:input_type -> schema.v1.DeleteVlanRequest
+	41, // 53: schema.v1.SwitchService.SetRstp:input_type -> schema.v1.SetRstpRequest
+	42, // 54: schema.v1.SwitchService.SetRstpPort:input_type -> schema.v1.SetRstpPortRequest
+	43, // 55: schema.v1.SwitchService.SetLag:input_type -> schema.v1.SetLagRequest
+	44, // 56: schema.v1.SwitchService.DeleteLag:input_type -> schema.v1.DeleteLagRequest
+	45, // 57: schema.v1.SwitchService.SetIgmp:input_type -> schema.v1.SetIgmpRequest
+	46, // 58: schema.v1.SwitchService.SetStormControl:input_type -> schema.v1.SetStormControlRequest
+	36, // 59: schema.v1.SwitchService.GetSwitch:output_type -> schema.v1.GetSwitchResponse
+	47, // 60: schema.v1.SwitchService.SetPortAdmin:output_type -> schema.v1.SetPortAdminResponse
+	48, // 61: schema.v1.SwitchService.SetPortConfig:output_type -> schema.v1.SetPortConfigResponse
+	49, // 62: schema.v1.SwitchService.SetVlan:output_type -> schema.v1.SetVlanResponse
+	50, // 63: schema.v1.SwitchService.DeleteVlan:output_type -> schema.v1.DeleteVlanResponse
+	51, // 64: schema.v1.SwitchService.SetRstp:output_type -> schema.v1.SetRstpResponse
+	52, // 65: schema.v1.SwitchService.SetRstpPort:output_type -> schema.v1.SetRstpPortResponse
+	53, // 66: schema.v1.SwitchService.SetLag:output_type -> schema.v1.SetLagResponse
+	54, // 67: schema.v1.SwitchService.DeleteLag:output_type -> schema.v1.DeleteLagResponse
+	55, // 68: schema.v1.SwitchService.SetIgmp:output_type -> schema.v1.SetIgmpResponse
+	56, // 69: schema.v1.SwitchService.SetStormControl:output_type -> schema.v1.SetStormControlResponse
+	59, // [59:70] is the sub-list for method output_type
+	48, // [48:59] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1_switch_proto_init() }
@@ -3796,7 +3909,7 @@ func file_schema_v1_switch_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1_switch_proto_rawDesc), len(file_schema_v1_switch_proto_rawDesc)),
 			NumEnums:      14,
-			NumMessages:   41,
+			NumMessages:   43,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
