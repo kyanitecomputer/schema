@@ -343,6 +343,17 @@ message SetPortAdminRequest {
   bool admin_up = 3;
 }
 
+// SetPortConfigRequest is a Tier 2 command to update the writable configuration
+// of one switch port. It mirrors the OpenConfig openconfig-interfaces container
+// /interfaces/interface[name]/config so a gNMI translation stays mechanical;
+// today only the description leaf (.../config/description) is settable here.
+// Administrative state (.../config/enabled) keeps its own SetPortAdmin command.
+message SetPortConfigRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 port = 2;
+  string description = 3 [(buf.validate.field).string.max_len = 255];
+}
+
 // SetVlanRequest is a Tier 2 command to create or replace a VLAN.
 message SetVlanRequest {
   string node_id = 1 [(buf.validate.field).string.min_len = 1];
@@ -365,6 +376,10 @@ message SetPortAdminResponse {
   SwitchDetail detail = 1;
 }
 
+message SetPortConfigResponse {
+  SwitchDetail detail = 1;
+}
+
 message SetVlanResponse {
   SwitchDetail detail = 1;
 }
@@ -378,6 +393,7 @@ message DeleteVlanResponse {
 service SwitchService {
   rpc GetSwitch(GetSwitchRequest) returns (GetSwitchResponse);
   rpc SetPortAdmin(SetPortAdminRequest) returns (SetPortAdminResponse);
+  rpc SetPortConfig(SetPortConfigRequest) returns (SetPortConfigResponse);
   rpc SetVlan(SetVlanRequest) returns (SetVlanResponse);
   rpc DeleteVlan(DeleteVlanRequest) returns (DeleteVlanResponse);
 }

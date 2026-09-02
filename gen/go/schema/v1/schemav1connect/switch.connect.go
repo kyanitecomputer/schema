@@ -38,6 +38,9 @@ const (
 	// SwitchServiceSetPortAdminProcedure is the fully-qualified name of the SwitchService's
 	// SetPortAdmin RPC.
 	SwitchServiceSetPortAdminProcedure = "/schema.v1.SwitchService/SetPortAdmin"
+	// SwitchServiceSetPortConfigProcedure is the fully-qualified name of the SwitchService's
+	// SetPortConfig RPC.
+	SwitchServiceSetPortConfigProcedure = "/schema.v1.SwitchService/SetPortConfig"
 	// SwitchServiceSetVlanProcedure is the fully-qualified name of the SwitchService's SetVlan RPC.
 	SwitchServiceSetVlanProcedure = "/schema.v1.SwitchService/SetVlan"
 	// SwitchServiceDeleteVlanProcedure is the fully-qualified name of the SwitchService's DeleteVlan
@@ -49,6 +52,7 @@ const (
 type SwitchServiceClient interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
 	SetPortAdmin(context.Context, *connect.Request[v1.SetPortAdminRequest]) (*connect.Response[v1.SetPortAdminResponse], error)
+	SetPortConfig(context.Context, *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error)
 	SetVlan(context.Context, *connect.Request[v1.SetVlanRequest]) (*connect.Response[v1.SetVlanResponse], error)
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
 }
@@ -76,6 +80,12 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetPortAdmin")),
 			connect.WithClientOptions(opts...),
 		),
+		setPortConfig: connect.NewClient[v1.SetPortConfigRequest, v1.SetPortConfigResponse](
+			httpClient,
+			baseURL+SwitchServiceSetPortConfigProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetPortConfig")),
+			connect.WithClientOptions(opts...),
+		),
 		setVlan: connect.NewClient[v1.SetVlanRequest, v1.SetVlanResponse](
 			httpClient,
 			baseURL+SwitchServiceSetVlanProcedure,
@@ -93,10 +103,11 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // switchServiceClient implements SwitchServiceClient.
 type switchServiceClient struct {
-	getSwitch    *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
-	setPortAdmin *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
-	setVlan      *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
-	deleteVlan   *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
+	getSwitch     *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
+	setPortAdmin  *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
+	setPortConfig *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
+	setVlan       *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
+	deleteVlan    *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -107,6 +118,11 @@ func (c *switchServiceClient) GetSwitch(ctx context.Context, req *connect.Reques
 // SetPortAdmin calls schema.v1.SwitchService.SetPortAdmin.
 func (c *switchServiceClient) SetPortAdmin(ctx context.Context, req *connect.Request[v1.SetPortAdminRequest]) (*connect.Response[v1.SetPortAdminResponse], error) {
 	return c.setPortAdmin.CallUnary(ctx, req)
+}
+
+// SetPortConfig calls schema.v1.SwitchService.SetPortConfig.
+func (c *switchServiceClient) SetPortConfig(ctx context.Context, req *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error) {
+	return c.setPortConfig.CallUnary(ctx, req)
 }
 
 // SetVlan calls schema.v1.SwitchService.SetVlan.
@@ -123,6 +139,7 @@ func (c *switchServiceClient) DeleteVlan(ctx context.Context, req *connect.Reque
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
 	SetPortAdmin(context.Context, *connect.Request[v1.SetPortAdminRequest]) (*connect.Response[v1.SetPortAdminResponse], error)
+	SetPortConfig(context.Context, *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error)
 	SetVlan(context.Context, *connect.Request[v1.SetVlanRequest]) (*connect.Response[v1.SetVlanResponse], error)
 	DeleteVlan(context.Context, *connect.Request[v1.DeleteVlanRequest]) (*connect.Response[v1.DeleteVlanResponse], error)
 }
@@ -146,6 +163,12 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetPortAdmin")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetPortConfigHandler := connect.NewUnaryHandler(
+		SwitchServiceSetPortConfigProcedure,
+		svc.SetPortConfig,
+		connect.WithSchema(switchServiceMethods.ByName("SetPortConfig")),
+		connect.WithHandlerOptions(opts...),
+	)
 	switchServiceSetVlanHandler := connect.NewUnaryHandler(
 		SwitchServiceSetVlanProcedure,
 		svc.SetVlan,
@@ -164,6 +187,8 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceGetSwitchHandler.ServeHTTP(w, r)
 		case SwitchServiceSetPortAdminProcedure:
 			switchServiceSetPortAdminHandler.ServeHTTP(w, r)
+		case SwitchServiceSetPortConfigProcedure:
+			switchServiceSetPortConfigHandler.ServeHTTP(w, r)
 		case SwitchServiceSetVlanProcedure:
 			switchServiceSetVlanHandler.ServeHTTP(w, r)
 		case SwitchServiceDeleteVlanProcedure:
@@ -183,6 +208,10 @@ func (UnimplementedSwitchServiceHandler) GetSwitch(context.Context, *connect.Req
 
 func (UnimplementedSwitchServiceHandler) SetPortAdmin(context.Context, *connect.Request[v1.SetPortAdminRequest]) (*connect.Response[v1.SetPortAdminResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetPortAdmin is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetPortConfig(context.Context, *connect.Request[v1.SetPortConfigRequest]) (*connect.Response[v1.SetPortConfigResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetPortConfig is not implemented"))
 }
 
 func (UnimplementedSwitchServiceHandler) SetVlan(context.Context, *connect.Request[v1.SetVlanRequest]) (*connect.Response[v1.SetVlanResponse], error) {
