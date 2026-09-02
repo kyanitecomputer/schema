@@ -77,6 +77,11 @@ const (
 	// SwitchServiceReorderAclProcedure is the fully-qualified name of the SwitchService's ReorderAcl
 	// RPC.
 	SwitchServiceReorderAclProcedure = "/schema.v1.SwitchService/ReorderAcl"
+	// SwitchServiceSetErpsProcedure is the fully-qualified name of the SwitchService's SetErps RPC.
+	SwitchServiceSetErpsProcedure = "/schema.v1.SwitchService/SetErps"
+	// SwitchServiceDeleteErpsProcedure is the fully-qualified name of the SwitchService's DeleteErps
+	// RPC.
+	SwitchServiceDeleteErpsProcedure = "/schema.v1.SwitchService/DeleteErps"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -99,6 +104,8 @@ type SwitchServiceClient interface {
 	SetAcl(context.Context, *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error)
 	DeleteAcl(context.Context, *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error)
 	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
+	SetErps(context.Context, *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error)
+	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -220,6 +227,18 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("ReorderAcl")),
 			connect.WithClientOptions(opts...),
 		),
+		setErps: connect.NewClient[v1.SetErpsRequest, v1.SetErpsResponse](
+			httpClient,
+			baseURL+SwitchServiceSetErpsProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetErps")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteErps: connect.NewClient[v1.DeleteErpsRequest, v1.DeleteErpsResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteErpsProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteErps")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -243,6 +262,8 @@ type switchServiceClient struct {
 	setAcl          *connect.Client[v1.SetAclRequest, v1.SetAclResponse]
 	deleteAcl       *connect.Client[v1.DeleteAclRequest, v1.DeleteAclResponse]
 	reorderAcl      *connect.Client[v1.ReorderAclRequest, v1.ReorderAclResponse]
+	setErps         *connect.Client[v1.SetErpsRequest, v1.SetErpsResponse]
+	deleteErps      *connect.Client[v1.DeleteErpsRequest, v1.DeleteErpsResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -335,6 +356,16 @@ func (c *switchServiceClient) ReorderAcl(ctx context.Context, req *connect.Reque
 	return c.reorderAcl.CallUnary(ctx, req)
 }
 
+// SetErps calls schema.v1.SwitchService.SetErps.
+func (c *switchServiceClient) SetErps(ctx context.Context, req *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error) {
+	return c.setErps.CallUnary(ctx, req)
+}
+
+// DeleteErps calls schema.v1.SwitchService.DeleteErps.
+func (c *switchServiceClient) DeleteErps(ctx context.Context, req *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error) {
+	return c.deleteErps.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -355,6 +386,8 @@ type SwitchServiceHandler interface {
 	SetAcl(context.Context, *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error)
 	DeleteAcl(context.Context, *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error)
 	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
+	SetErps(context.Context, *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error)
+	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -472,6 +505,18 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("ReorderAcl")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetErpsHandler := connect.NewUnaryHandler(
+		SwitchServiceSetErpsProcedure,
+		svc.SetErps,
+		connect.WithSchema(switchServiceMethods.ByName("SetErps")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteErpsHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteErpsProcedure,
+		svc.DeleteErps,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteErps")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -510,6 +555,10 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceDeleteAclHandler.ServeHTTP(w, r)
 		case SwitchServiceReorderAclProcedure:
 			switchServiceReorderAclHandler.ServeHTTP(w, r)
+		case SwitchServiceSetErpsProcedure:
+			switchServiceSetErpsHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteErpsProcedure:
+			switchServiceDeleteErpsHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -589,4 +638,12 @@ func (UnimplementedSwitchServiceHandler) DeleteAcl(context.Context, *connect.Req
 
 func (UnimplementedSwitchServiceHandler) ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.ReorderAcl is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetErps(context.Context, *connect.Request[v1.SetErpsRequest]) (*connect.Response[v1.SetErpsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetErps is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteErps is not implemented"))
 }
