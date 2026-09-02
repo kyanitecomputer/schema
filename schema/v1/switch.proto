@@ -513,6 +513,44 @@ message SetDot1xPortRequest {
   Dot1xPortState state = 3;
 }
 
+// SetSnmpRequest sets the SNMP agent's switch-wide config: whether the agent is
+// enabled, and the sysLocation and sysContact strings. Aligns with the
+// openconfig-system SNMP config. Community strings and v3 users are managed by
+// the dedicated SetSnmpCommunity / DeleteSnmpCommunity / SetSnmpV3User /
+// DeleteSnmpV3User commands.
+message SetSnmpRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  bool enabled = 2;
+  string location = 3;
+  string contact = 4;
+}
+
+// SetSnmpCommunityRequest creates or replaces an SNMP v1/v2c community, keyed by
+// the community string.
+message SetSnmpCommunityRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  SnmpCommunity community = 2;
+}
+
+// DeleteSnmpCommunityRequest removes an SNMP community by its string.
+message DeleteSnmpCommunityRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  string community = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+// SetSnmpV3UserRequest creates or replaces an SNMP v3 USM user, keyed by name.
+// Secrets are provisioned out of band and never carried here.
+message SetSnmpV3UserRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  SnmpV3User user = 2;
+}
+
+// DeleteSnmpV3UserRequest removes an SNMP v3 user by name.
+message DeleteSnmpV3UserRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -600,6 +638,26 @@ message SetDot1xPortResponse {
   SwitchDetail detail = 1;
 }
 
+message SetSnmpResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetSnmpCommunityResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteSnmpCommunityResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetSnmpV3UserResponse {
+  SwitchDetail detail = 1;
+}
+
+message DeleteSnmpV3UserResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -625,4 +683,9 @@ service SwitchService {
   rpc DeleteErps(DeleteErpsRequest) returns (DeleteErpsResponse);
   rpc SetDot1x(SetDot1xRequest) returns (SetDot1xResponse);
   rpc SetDot1xPort(SetDot1xPortRequest) returns (SetDot1xPortResponse);
+  rpc SetSnmp(SetSnmpRequest) returns (SetSnmpResponse);
+  rpc SetSnmpCommunity(SetSnmpCommunityRequest) returns (SetSnmpCommunityResponse);
+  rpc DeleteSnmpCommunity(DeleteSnmpCommunityRequest) returns (DeleteSnmpCommunityResponse);
+  rpc SetSnmpV3User(SetSnmpV3UserRequest) returns (SetSnmpV3UserResponse);
+  rpc DeleteSnmpV3User(DeleteSnmpV3UserRequest) returns (DeleteSnmpV3UserResponse);
 }

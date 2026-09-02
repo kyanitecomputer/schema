@@ -23453,6 +23453,754 @@ impl ::buffa::ExtensionSet for SetDot1xPortRequest {
         &mut self.__buffa_unknown_fields
     }
 }
+/// SetSnmpRequest sets the SNMP agent's switch-wide config: whether the agent is
+/// enabled, and the sysLocation and sysContact strings. Aligns with the
+/// openconfig-system SNMP config. Community strings and v3 users are managed by
+/// the dedicated SetSnmpCommunity / DeleteSnmpCommunity / SetSnmpV3User /
+/// DeleteSnmpV3User commands.
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `enabled`
+    pub enabled: bool,
+    /// Field 3: `location`
+    pub location: ::buffa::alloc::string::String,
+    /// Field 4: `contact`
+    pub contact: ::buffa::alloc::string::String,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpRequest")
+            .field("node_id", &self.node_id)
+            .field("enabled", &self.enabled)
+            .field("location", &self.location)
+            .field("contact", &self.contact)
+            .finish()
+    }
+}
+impl SetSnmpRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpRequest";
+}
+impl ::buffa::DefaultInstance for SetSnmpRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpRequest";
+}
+impl ::buffa::Message for SetSnmpRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.enabled {
+            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+        }
+        if !self.location.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.location) as u32;
+        }
+        if !self.contact.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.contact) as u32;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.enabled {
+            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
+                .encode(buf);
+            ::buffa::types::encode_bool(self.enabled, buf);
+        }
+        if !self.location.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    3u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.location, buf);
+        }
+        if !self.contact.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    4u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.contact, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.enabled = ::buffa::types::decode_bool(buf)?;
+            }
+            3u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 3u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.location, buf)?;
+            }
+            4u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 4u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.contact, buf)?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.enabled = false;
+        self.location.clear();
+        self.contact.clear();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+/// SetSnmpCommunityRequest creates or replaces an SNMP v1/v2c community, keyed by
+/// the community string.
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpCommunityRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `community`
+    pub community: ::buffa::MessageField<SnmpCommunity>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpCommunityRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpCommunityRequest")
+            .field("node_id", &self.node_id)
+            .field("community", &self.community)
+            .finish()
+    }
+}
+impl SetSnmpCommunityRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityRequest";
+}
+impl ::buffa::DefaultInstance for SetSnmpCommunityRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpCommunityRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpCommunityRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpCommunityRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpCommunityRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityRequest";
+}
+impl ::buffa::Message for SetSnmpCommunityRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.community.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.community.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.community.is_set() {
+            ::buffa::encoding::Tag::new(
+                    2u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.community.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.community.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.community = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpCommunityRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpCommunityRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+/// DeleteSnmpCommunityRequest removes an SNMP community by its string.
+#[derive(Clone, PartialEq, Default)]
+pub struct DeleteSnmpCommunityRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `community`
+    pub community: ::buffa::alloc::string::String,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for DeleteSnmpCommunityRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("DeleteSnmpCommunityRequest")
+            .field("node_id", &self.node_id)
+            .field("community", &self.community)
+            .finish()
+    }
+}
+impl DeleteSnmpCommunityRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityRequest";
+}
+impl ::buffa::DefaultInstance for DeleteSnmpCommunityRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<DeleteSnmpCommunityRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for DeleteSnmpCommunityRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "DeleteSnmpCommunityRequest";
+    const FULL_NAME: &'static str = "schema.v1.DeleteSnmpCommunityRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityRequest";
+}
+impl ::buffa::Message for DeleteSnmpCommunityRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if !self.community.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.community) as u32;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if !self.community.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    2u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.community, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.community, buf)?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.community.clear();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for DeleteSnmpCommunityRequest {
+    const PROTO_FQN: &'static str = "schema.v1.DeleteSnmpCommunityRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+/// SetSnmpV3UserRequest creates or replaces an SNMP v3 USM user, keyed by name.
+/// Secrets are provisioned out of band and never carried here.
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpV3UserRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `user`
+    pub user: ::buffa::MessageField<SnmpV3User>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpV3UserRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpV3UserRequest")
+            .field("node_id", &self.node_id)
+            .field("user", &self.user)
+            .finish()
+    }
+}
+impl SetSnmpV3UserRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserRequest";
+}
+impl ::buffa::DefaultInstance for SetSnmpV3UserRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpV3UserRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpV3UserRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpV3UserRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpV3UserRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserRequest";
+}
+impl ::buffa::Message for SetSnmpV3UserRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.user.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.user.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.user.is_set() {
+            ::buffa::encoding::Tag::new(
+                    2u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.user.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.user.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.user = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpV3UserRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpV3UserRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+/// DeleteSnmpV3UserRequest removes an SNMP v3 user by name.
+#[derive(Clone, PartialEq, Default)]
+pub struct DeleteSnmpV3UserRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `name`
+    pub name: ::buffa::alloc::string::String,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for DeleteSnmpV3UserRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("DeleteSnmpV3UserRequest")
+            .field("node_id", &self.node_id)
+            .field("name", &self.name)
+            .finish()
+    }
+}
+impl DeleteSnmpV3UserRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserRequest";
+}
+impl ::buffa::DefaultInstance for DeleteSnmpV3UserRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<DeleteSnmpV3UserRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for DeleteSnmpV3UserRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "DeleteSnmpV3UserRequest";
+    const FULL_NAME: &'static str = "schema.v1.DeleteSnmpV3UserRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserRequest";
+}
+impl ::buffa::Message for DeleteSnmpV3UserRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if !self.name.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.name) as u32;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if !self.name.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    2u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.name, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.name, buf)?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.name.clear();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for DeleteSnmpV3UserRequest {
+    const PROTO_FQN: &'static str = "schema.v1.DeleteSnmpV3UserRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
 /// Each mutation returns the full switch detail so the client re-renders
 /// authoritative state in one round trip. buf requires a distinct response type
 /// per RPC.
@@ -25906,6 +26654,593 @@ impl ::buffa::Message for SetDot1xPortResponse {
 }
 impl ::buffa::ExtensionSet for SetDot1xPortResponse {
     const PROTO_FQN: &'static str = "schema.v1.SetDot1xPortResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetSnmpResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpResponse";
+}
+impl ::buffa::DefaultInstance for SetSnmpResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpResponse";
+}
+impl ::buffa::Message for SetSnmpResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpCommunityResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpCommunityResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpCommunityResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetSnmpCommunityResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityResponse";
+}
+impl ::buffa::DefaultInstance for SetSnmpCommunityResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpCommunityResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpCommunityResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpCommunityResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpCommunityResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityResponse";
+}
+impl ::buffa::Message for SetSnmpCommunityResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpCommunityResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpCommunityResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct DeleteSnmpCommunityResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for DeleteSnmpCommunityResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("DeleteSnmpCommunityResponse")
+            .field("detail", &self.detail)
+            .finish()
+    }
+}
+impl DeleteSnmpCommunityResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityResponse";
+}
+impl ::buffa::DefaultInstance for DeleteSnmpCommunityResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<DeleteSnmpCommunityResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for DeleteSnmpCommunityResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "DeleteSnmpCommunityResponse";
+    const FULL_NAME: &'static str = "schema.v1.DeleteSnmpCommunityResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityResponse";
+}
+impl ::buffa::Message for DeleteSnmpCommunityResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for DeleteSnmpCommunityResponse {
+    const PROTO_FQN: &'static str = "schema.v1.DeleteSnmpCommunityResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetSnmpV3UserResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetSnmpV3UserResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetSnmpV3UserResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetSnmpV3UserResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserResponse";
+}
+impl ::buffa::DefaultInstance for SetSnmpV3UserResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetSnmpV3UserResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetSnmpV3UserResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetSnmpV3UserResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetSnmpV3UserResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserResponse";
+}
+impl ::buffa::Message for SetSnmpV3UserResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetSnmpV3UserResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetSnmpV3UserResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct DeleteSnmpV3UserResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for DeleteSnmpV3UserResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("DeleteSnmpV3UserResponse").field("detail", &self.detail).finish()
+    }
+}
+impl DeleteSnmpV3UserResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserResponse";
+}
+impl ::buffa::DefaultInstance for DeleteSnmpV3UserResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<DeleteSnmpV3UserResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for DeleteSnmpV3UserResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "DeleteSnmpV3UserResponse";
+    const FULL_NAME: &'static str = "schema.v1.DeleteSnmpV3UserResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserResponse";
+}
+impl ::buffa::Message for DeleteSnmpV3UserResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for DeleteSnmpV3UserResponse {
+    const PROTO_FQN: &'static str = "schema.v1.DeleteSnmpV3UserResponse";
     fn unknown_fields(&self) -> &::buffa::UnknownFields {
         &self.__buffa_unknown_fields
     }
@@ -72950,6 +74285,1656 @@ pub mod __buffa {
             type View<'a> = SetDot1xPortRequestView<'a>;
             type ViewHandle = SetDot1xPortRequestOwnedView;
         }
+        /// SetSnmpRequest sets the SNMP agent's switch-wide config: whether the agent is
+        /// enabled, and the sysLocation and sysContact strings. Aligns with the
+        /// openconfig-system SNMP config. Community strings and v3 users are managed by
+        /// the dedicated SetSnmpCommunity / DeleteSnmpCommunity / SetSnmpV3User /
+        /// DeleteSnmpV3User commands.
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `enabled`
+            pub enabled: bool,
+            /// Field 3: `location`
+            pub location: &'a str,
+            /// Field 4: `contact`
+            pub contact: &'a str,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.enabled = ::buffa::types::decode_bool(&mut cur)?;
+                        }
+                        3u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 3u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.location = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        4u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 4u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.contact = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpRequestView<'a> {
+            type Owned = super::super::SetSnmpRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpRequest {
+                    node_id: self.node_id.to_string(),
+                    enabled: self.enabled,
+                    location: self.location.to_string(),
+                    contact: self.contact.to_string(),
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.enabled {
+                    size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+                }
+                if !self.location.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.location) as u32;
+                }
+                if !self.contact.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.contact) as u32;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.enabled {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::Varint,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_bool(self.enabled, buf);
+                }
+                if !self.location.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            3u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.location, buf);
+                }
+                if !self.contact.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            4u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.contact, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<SetSnmpRequestView<'static>> = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpRequestView<'static> {
+            type Reborrowed<'b> = SetSnmpRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpRequestOwnedView(
+            ::buffa::OwnedView<SetSnmpRequestView<'static>>,
+        );
+        impl SetSnmpRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpRequestOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetSnmpRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `enabled`
+            #[must_use]
+            pub fn enabled(&self) -> bool {
+                self.0.reborrow().enabled
+            }
+            /// Field 3: `location`
+            #[must_use]
+            pub fn location(&self) -> &'_ str {
+                self.0.reborrow().location
+            }
+            /// Field 4: `contact`
+            #[must_use]
+            pub fn contact(&self) -> &'_ str {
+                self.0.reborrow().contact
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetSnmpRequestView<'static>>>
+        for SetSnmpRequestOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetSnmpRequestView<'static>>) -> Self {
+                SetSnmpRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpRequestOwnedView>
+        for ::buffa::OwnedView<SetSnmpRequestView<'static>> {
+            fn from(wrapper: SetSnmpRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetSnmpRequestView<'static>>>
+        for SetSnmpRequestOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetSnmpRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpRequest {
+            type View<'a> = SetSnmpRequestView<'a>;
+            type ViewHandle = SetSnmpRequestOwnedView;
+        }
+        /// SetSnmpCommunityRequest creates or replaces an SNMP v1/v2c community, keyed by
+        /// the community string.
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpCommunityRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `community`
+            pub community: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SnmpCommunityView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpCommunityRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.community.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.community = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SnmpCommunityView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpCommunityRequestView<'a> {
+            type Owned = super::super::SetSnmpCommunityRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpCommunityRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpCommunityRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpCommunityRequest {
+                    node_id: self.node_id.to_string(),
+                    community: match self.community.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SnmpCommunity,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpCommunityRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.community.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.community.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.community.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.community.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpCommunityRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpCommunityRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpCommunityRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpCommunityRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetSnmpCommunityRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpCommunityRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpCommunityRequestView<'static> {
+            type Reborrowed<'b> = SetSnmpCommunityRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpCommunityRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpCommunityRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpCommunityRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpCommunityRequestOwnedView(
+            ::buffa::OwnedView<SetSnmpCommunityRequestView<'static>>,
+        );
+        impl SetSnmpCommunityRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpCommunityRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityRequestOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`SetSnmpCommunityRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpCommunityRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpCommunityRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `community`
+            #[must_use]
+            pub fn community(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SnmpCommunityView<'_>,
+            > {
+                &self.0.reborrow().community
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<SetSnmpCommunityRequestView<'static>>,
+        > for SetSnmpCommunityRequestOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetSnmpCommunityRequestView<'static>>,
+            ) -> Self {
+                SetSnmpCommunityRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpCommunityRequestOwnedView>
+        for ::buffa::OwnedView<SetSnmpCommunityRequestView<'static>> {
+            fn from(wrapper: SetSnmpCommunityRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<SetSnmpCommunityRequestView<'static>>,
+        > for SetSnmpCommunityRequestOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<SetSnmpCommunityRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpCommunityRequest {
+            type View<'a> = SetSnmpCommunityRequestView<'a>;
+            type ViewHandle = SetSnmpCommunityRequestOwnedView;
+        }
+        /// DeleteSnmpCommunityRequest removes an SNMP community by its string.
+        #[derive(Clone, Debug, Default)]
+        pub struct DeleteSnmpCommunityRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `community`
+            pub community: &'a str,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> DeleteSnmpCommunityRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.community = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for DeleteSnmpCommunityRequestView<'a> {
+            type Owned = super::super::DeleteSnmpCommunityRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::DeleteSnmpCommunityRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::DeleteSnmpCommunityRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::DeleteSnmpCommunityRequest {
+                    node_id: self.node_id.to_string(),
+                    community: self.community.to_string(),
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for DeleteSnmpCommunityRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if !self.community.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.community) as u32;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if !self.community.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.community, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for DeleteSnmpCommunityRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "DeleteSnmpCommunityRequest";
+            const FULL_NAME: &'static str = "schema.v1.DeleteSnmpCommunityRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for DeleteSnmpCommunityRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    DeleteSnmpCommunityRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <DeleteSnmpCommunityRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for DeleteSnmpCommunityRequestView<'static> {
+            type Reborrowed<'b> = DeleteSnmpCommunityRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `DeleteSnmpCommunityRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`DeleteSnmpCommunityRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`DeleteSnmpCommunityRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct DeleteSnmpCommunityRequestOwnedView(
+            ::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>>,
+        );
+        impl DeleteSnmpCommunityRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityRequestOwnedView(
+                        ::buffa::OwnedView::decode(bytes)?,
+                    ),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::DeleteSnmpCommunityRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityRequestOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`DeleteSnmpCommunityRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &DeleteSnmpCommunityRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::DeleteSnmpCommunityRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `community`
+            #[must_use]
+            pub fn community(&self) -> &'_ str {
+                self.0.reborrow().community
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>>,
+        > for DeleteSnmpCommunityRequestOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>>,
+            ) -> Self {
+                DeleteSnmpCommunityRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<DeleteSnmpCommunityRequestOwnedView>
+        for ::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>> {
+            fn from(wrapper: DeleteSnmpCommunityRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>>,
+        > for DeleteSnmpCommunityRequestOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<DeleteSnmpCommunityRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::DeleteSnmpCommunityRequest {
+            type View<'a> = DeleteSnmpCommunityRequestView<'a>;
+            type ViewHandle = DeleteSnmpCommunityRequestOwnedView;
+        }
+        /// SetSnmpV3UserRequest creates or replaces an SNMP v3 USM user, keyed by name.
+        /// Secrets are provisioned out of band and never carried here.
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpV3UserRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `user`
+            pub user: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SnmpV3UserView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpV3UserRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.user.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.user = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SnmpV3UserView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpV3UserRequestView<'a> {
+            type Owned = super::super::SetSnmpV3UserRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpV3UserRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpV3UserRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpV3UserRequest {
+                    node_id: self.node_id.to_string(),
+                    user: match self.user.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SnmpV3User,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpV3UserRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.user.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.user.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.user.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.user.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpV3UserRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpV3UserRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpV3UserRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpV3UserRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetSnmpV3UserRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpV3UserRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpV3UserRequestView<'static> {
+            type Reborrowed<'b> = SetSnmpV3UserRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpV3UserRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpV3UserRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpV3UserRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpV3UserRequestOwnedView(
+            ::buffa::OwnedView<SetSnmpV3UserRequestView<'static>>,
+        );
+        impl SetSnmpV3UserRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpV3UserRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserRequestOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetSnmpV3UserRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpV3UserRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpV3UserRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `user`
+            #[must_use]
+            pub fn user(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SnmpV3UserView<'_>,
+            > {
+                &self.0.reborrow().user
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetSnmpV3UserRequestView<'static>>>
+        for SetSnmpV3UserRequestOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetSnmpV3UserRequestView<'static>>,
+            ) -> Self {
+                SetSnmpV3UserRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpV3UserRequestOwnedView>
+        for ::buffa::OwnedView<SetSnmpV3UserRequestView<'static>> {
+            fn from(wrapper: SetSnmpV3UserRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<SetSnmpV3UserRequestView<'static>>,
+        > for SetSnmpV3UserRequestOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetSnmpV3UserRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpV3UserRequest {
+            type View<'a> = SetSnmpV3UserRequestView<'a>;
+            type ViewHandle = SetSnmpV3UserRequestOwnedView;
+        }
+        /// DeleteSnmpV3UserRequest removes an SNMP v3 user by name.
+        #[derive(Clone, Debug, Default)]
+        pub struct DeleteSnmpV3UserRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `name`
+            pub name: &'a str,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> DeleteSnmpV3UserRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.name = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for DeleteSnmpV3UserRequestView<'a> {
+            type Owned = super::super::DeleteSnmpV3UserRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::DeleteSnmpV3UserRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::DeleteSnmpV3UserRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::DeleteSnmpV3UserRequest {
+                    node_id: self.node_id.to_string(),
+                    name: self.name.to_string(),
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for DeleteSnmpV3UserRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if !self.name.is_empty() {
+                    size += 1u32 + ::buffa::types::string_encoded_len(&self.name) as u32;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if !self.name.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.name, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for DeleteSnmpV3UserRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "DeleteSnmpV3UserRequest";
+            const FULL_NAME: &'static str = "schema.v1.DeleteSnmpV3UserRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for DeleteSnmpV3UserRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    DeleteSnmpV3UserRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <DeleteSnmpV3UserRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for DeleteSnmpV3UserRequestView<'static> {
+            type Reborrowed<'b> = DeleteSnmpV3UserRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `DeleteSnmpV3UserRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`DeleteSnmpV3UserRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`DeleteSnmpV3UserRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct DeleteSnmpV3UserRequestOwnedView(
+            ::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>>,
+        );
+        impl DeleteSnmpV3UserRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::DeleteSnmpV3UserRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserRequestOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`DeleteSnmpV3UserRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &DeleteSnmpV3UserRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::DeleteSnmpV3UserRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `name`
+            #[must_use]
+            pub fn name(&self) -> &'_ str {
+                self.0.reborrow().name
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>>,
+        > for DeleteSnmpV3UserRequestOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>>,
+            ) -> Self {
+                DeleteSnmpV3UserRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<DeleteSnmpV3UserRequestOwnedView>
+        for ::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>> {
+            fn from(wrapper: DeleteSnmpV3UserRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>>,
+        > for DeleteSnmpV3UserRequestOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<DeleteSnmpV3UserRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::DeleteSnmpV3UserRequest {
+            type View<'a> = DeleteSnmpV3UserRequestView<'a>;
+            type ViewHandle = DeleteSnmpV3UserRequestOwnedView;
+        }
         /// Each mutation returns the full switch detail so the client re-renders
         /// authoritative state in one round trip. buf requires a distinct response type
         /// per RPC.
@@ -79186,6 +82171,1516 @@ pub mod __buffa {
             type View<'a> = SetDot1xPortResponseView<'a>;
             type ViewHandle = SetDot1xPortResponseOwnedView;
         }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpResponseView<'a> {
+            type Owned = super::super::SetSnmpResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetSnmpResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpResponseView<'static> {
+            type Reborrowed<'b> = SetSnmpResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpResponseOwnedView(
+            ::buffa::OwnedView<SetSnmpResponseView<'static>>,
+        );
+        impl SetSnmpResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpResponseOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetSnmpResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetSnmpResponseView<'static>>>
+        for SetSnmpResponseOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetSnmpResponseView<'static>>) -> Self {
+                SetSnmpResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpResponseOwnedView>
+        for ::buffa::OwnedView<SetSnmpResponseView<'static>> {
+            fn from(wrapper: SetSnmpResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetSnmpResponseView<'static>>>
+        for SetSnmpResponseOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetSnmpResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpResponse {
+            type View<'a> = SetSnmpResponseView<'a>;
+            type ViewHandle = SetSnmpResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpCommunityResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpCommunityResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpCommunityResponseView<'a> {
+            type Owned = super::super::SetSnmpCommunityResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpCommunityResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpCommunityResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpCommunityResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpCommunityResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpCommunityResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpCommunityResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpCommunityResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpCommunityResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpCommunityResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetSnmpCommunityResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpCommunityResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpCommunityResponseView<'static> {
+            type Reborrowed<'b> = SetSnmpCommunityResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpCommunityResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpCommunityResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpCommunityResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpCommunityResponseOwnedView(
+            ::buffa::OwnedView<SetSnmpCommunityResponseView<'static>>,
+        );
+        impl SetSnmpCommunityResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpCommunityResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpCommunityResponseOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`SetSnmpCommunityResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpCommunityResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpCommunityResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<SetSnmpCommunityResponseView<'static>>,
+        > for SetSnmpCommunityResponseOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetSnmpCommunityResponseView<'static>>,
+            ) -> Self {
+                SetSnmpCommunityResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpCommunityResponseOwnedView>
+        for ::buffa::OwnedView<SetSnmpCommunityResponseView<'static>> {
+            fn from(wrapper: SetSnmpCommunityResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<SetSnmpCommunityResponseView<'static>>,
+        > for SetSnmpCommunityResponseOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<SetSnmpCommunityResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpCommunityResponse {
+            type View<'a> = SetSnmpCommunityResponseView<'a>;
+            type ViewHandle = SetSnmpCommunityResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct DeleteSnmpCommunityResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> DeleteSnmpCommunityResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for DeleteSnmpCommunityResponseView<'a> {
+            type Owned = super::super::DeleteSnmpCommunityResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::DeleteSnmpCommunityResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::DeleteSnmpCommunityResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::DeleteSnmpCommunityResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for DeleteSnmpCommunityResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for DeleteSnmpCommunityResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "DeleteSnmpCommunityResponse";
+            const FULL_NAME: &'static str = "schema.v1.DeleteSnmpCommunityResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpCommunityResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for DeleteSnmpCommunityResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    DeleteSnmpCommunityResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <DeleteSnmpCommunityResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for DeleteSnmpCommunityResponseView<'static> {
+            type Reborrowed<'b> = DeleteSnmpCommunityResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `DeleteSnmpCommunityResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`DeleteSnmpCommunityResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`DeleteSnmpCommunityResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct DeleteSnmpCommunityResponseOwnedView(
+            ::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>>,
+        );
+        impl DeleteSnmpCommunityResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityResponseOwnedView(
+                        ::buffa::OwnedView::decode(bytes)?,
+                    ),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::DeleteSnmpCommunityResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpCommunityResponseOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`DeleteSnmpCommunityResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &DeleteSnmpCommunityResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::DeleteSnmpCommunityResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>>,
+        > for DeleteSnmpCommunityResponseOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>>,
+            ) -> Self {
+                DeleteSnmpCommunityResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<DeleteSnmpCommunityResponseOwnedView>
+        for ::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>> {
+            fn from(wrapper: DeleteSnmpCommunityResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>>,
+        > for DeleteSnmpCommunityResponseOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<DeleteSnmpCommunityResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::DeleteSnmpCommunityResponse {
+            type View<'a> = DeleteSnmpCommunityResponseView<'a>;
+            type ViewHandle = DeleteSnmpCommunityResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetSnmpV3UserResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetSnmpV3UserResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetSnmpV3UserResponseView<'a> {
+            type Owned = super::super::SetSnmpV3UserResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetSnmpV3UserResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetSnmpV3UserResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetSnmpV3UserResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetSnmpV3UserResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetSnmpV3UserResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetSnmpV3UserResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetSnmpV3UserResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetSnmpV3UserResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetSnmpV3UserResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetSnmpV3UserResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetSnmpV3UserResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetSnmpV3UserResponseView<'static> {
+            type Reborrowed<'b> = SetSnmpV3UserResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetSnmpV3UserResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetSnmpV3UserResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetSnmpV3UserResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetSnmpV3UserResponseOwnedView(
+            ::buffa::OwnedView<SetSnmpV3UserResponseView<'static>>,
+        );
+        impl SetSnmpV3UserResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetSnmpV3UserResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetSnmpV3UserResponseOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetSnmpV3UserResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetSnmpV3UserResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetSnmpV3UserResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<SetSnmpV3UserResponseView<'static>>,
+        > for SetSnmpV3UserResponseOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetSnmpV3UserResponseView<'static>>,
+            ) -> Self {
+                SetSnmpV3UserResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetSnmpV3UserResponseOwnedView>
+        for ::buffa::OwnedView<SetSnmpV3UserResponseView<'static>> {
+            fn from(wrapper: SetSnmpV3UserResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<SetSnmpV3UserResponseView<'static>>,
+        > for SetSnmpV3UserResponseOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetSnmpV3UserResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetSnmpV3UserResponse {
+            type View<'a> = SetSnmpV3UserResponseView<'a>;
+            type ViewHandle = SetSnmpV3UserResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct DeleteSnmpV3UserResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> DeleteSnmpV3UserResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for DeleteSnmpV3UserResponseView<'a> {
+            type Owned = super::super::DeleteSnmpV3UserResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::DeleteSnmpV3UserResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::DeleteSnmpV3UserResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::DeleteSnmpV3UserResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for DeleteSnmpV3UserResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for DeleteSnmpV3UserResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "DeleteSnmpV3UserResponse";
+            const FULL_NAME: &'static str = "schema.v1.DeleteSnmpV3UserResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.DeleteSnmpV3UserResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for DeleteSnmpV3UserResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    DeleteSnmpV3UserResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <DeleteSnmpV3UserResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for DeleteSnmpV3UserResponseView<'static> {
+            type Reborrowed<'b> = DeleteSnmpV3UserResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `DeleteSnmpV3UserResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`DeleteSnmpV3UserResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`DeleteSnmpV3UserResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct DeleteSnmpV3UserResponseOwnedView(
+            ::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>>,
+        );
+        impl DeleteSnmpV3UserResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::DeleteSnmpV3UserResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    DeleteSnmpV3UserResponseOwnedView(
+                        ::buffa::OwnedView::from_owned(msg)?,
+                    ),
+                )
+            }
+            /// Borrow the full [`DeleteSnmpV3UserResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &DeleteSnmpV3UserResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::DeleteSnmpV3UserResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<
+            ::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>>,
+        > for DeleteSnmpV3UserResponseOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>>,
+            ) -> Self {
+                DeleteSnmpV3UserResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<DeleteSnmpV3UserResponseOwnedView>
+        for ::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>> {
+            fn from(wrapper: DeleteSnmpV3UserResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>>,
+        > for DeleteSnmpV3UserResponseOwnedView {
+            fn as_ref(
+                &self,
+            ) -> &::buffa::OwnedView<DeleteSnmpV3UserResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::DeleteSnmpV3UserResponse {
+            type View<'a> = DeleteSnmpV3UserResponseView<'a>;
+            type ViewHandle = DeleteSnmpV3UserResponseOwnedView;
+        }
         /// ManagedSystem is the normalized, Redfish-derived detail view of one managed
         /// entity: a Redfish ComputerSystem/Chassis for BMC/RMC-attached hosts, or the
         /// equivalent identity for a switch or router. Cairn projects Redfish resources
@@ -82455,6 +86950,26 @@ pub use self::__buffa::view::SetDot1xPortRequestView;
 #[doc(inline)]
 pub use self::__buffa::view::SetDot1xPortRequestOwnedView;
 #[doc(inline)]
+pub use self::__buffa::view::SetSnmpRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpRequestOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpCommunityRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpCommunityRequestOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpCommunityRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpCommunityRequestOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpV3UserRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpV3UserRequestOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpV3UserRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpV3UserRequestOwnedView;
+#[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseOwnedView;
@@ -82538,6 +87053,26 @@ pub use self::__buffa::view::SetDot1xResponseOwnedView;
 pub use self::__buffa::view::SetDot1xPortResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::SetDot1xPortResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpCommunityResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpCommunityResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpCommunityResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpCommunityResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpV3UserResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetSnmpV3UserResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpV3UserResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::DeleteSnmpV3UserResponseOwnedView;
 #[doc(inline)]
 pub use self::__buffa::view::ManagedSystemView;
 #[doc(inline)]
