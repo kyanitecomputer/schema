@@ -70,6 +70,13 @@ const (
 	// SwitchServiceDeleteMirrorProcedure is the fully-qualified name of the SwitchService's
 	// DeleteMirror RPC.
 	SwitchServiceDeleteMirrorProcedure = "/schema.v1.SwitchService/DeleteMirror"
+	// SwitchServiceSetAclProcedure is the fully-qualified name of the SwitchService's SetAcl RPC.
+	SwitchServiceSetAclProcedure = "/schema.v1.SwitchService/SetAcl"
+	// SwitchServiceDeleteAclProcedure is the fully-qualified name of the SwitchService's DeleteAcl RPC.
+	SwitchServiceDeleteAclProcedure = "/schema.v1.SwitchService/DeleteAcl"
+	// SwitchServiceReorderAclProcedure is the fully-qualified name of the SwitchService's ReorderAcl
+	// RPC.
+	SwitchServiceReorderAclProcedure = "/schema.v1.SwitchService/ReorderAcl"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -89,6 +96,9 @@ type SwitchServiceClient interface {
 	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
 	SetMirror(context.Context, *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error)
 	DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error)
+	SetAcl(context.Context, *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error)
+	DeleteAcl(context.Context, *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error)
+	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -192,6 +202,24 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("DeleteMirror")),
 			connect.WithClientOptions(opts...),
 		),
+		setAcl: connect.NewClient[v1.SetAclRequest, v1.SetAclResponse](
+			httpClient,
+			baseURL+SwitchServiceSetAclProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetAcl")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteAcl: connect.NewClient[v1.DeleteAclRequest, v1.DeleteAclResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteAclProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteAcl")),
+			connect.WithClientOptions(opts...),
+		),
+		reorderAcl: connect.NewClient[v1.ReorderAclRequest, v1.ReorderAclResponse](
+			httpClient,
+			baseURL+SwitchServiceReorderAclProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("ReorderAcl")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -212,6 +240,9 @@ type switchServiceClient struct {
 	setQosPort      *connect.Client[v1.SetQosPortRequest, v1.SetQosPortResponse]
 	setMirror       *connect.Client[v1.SetMirrorRequest, v1.SetMirrorResponse]
 	deleteMirror    *connect.Client[v1.DeleteMirrorRequest, v1.DeleteMirrorResponse]
+	setAcl          *connect.Client[v1.SetAclRequest, v1.SetAclResponse]
+	deleteAcl       *connect.Client[v1.DeleteAclRequest, v1.DeleteAclResponse]
+	reorderAcl      *connect.Client[v1.ReorderAclRequest, v1.ReorderAclResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -289,6 +320,21 @@ func (c *switchServiceClient) DeleteMirror(ctx context.Context, req *connect.Req
 	return c.deleteMirror.CallUnary(ctx, req)
 }
 
+// SetAcl calls schema.v1.SwitchService.SetAcl.
+func (c *switchServiceClient) SetAcl(ctx context.Context, req *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error) {
+	return c.setAcl.CallUnary(ctx, req)
+}
+
+// DeleteAcl calls schema.v1.SwitchService.DeleteAcl.
+func (c *switchServiceClient) DeleteAcl(ctx context.Context, req *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error) {
+	return c.deleteAcl.CallUnary(ctx, req)
+}
+
+// ReorderAcl calls schema.v1.SwitchService.ReorderAcl.
+func (c *switchServiceClient) ReorderAcl(ctx context.Context, req *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error) {
+	return c.reorderAcl.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -306,6 +352,9 @@ type SwitchServiceHandler interface {
 	SetQosPort(context.Context, *connect.Request[v1.SetQosPortRequest]) (*connect.Response[v1.SetQosPortResponse], error)
 	SetMirror(context.Context, *connect.Request[v1.SetMirrorRequest]) (*connect.Response[v1.SetMirrorResponse], error)
 	DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error)
+	SetAcl(context.Context, *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error)
+	DeleteAcl(context.Context, *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error)
+	ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -405,6 +454,24 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("DeleteMirror")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetAclHandler := connect.NewUnaryHandler(
+		SwitchServiceSetAclProcedure,
+		svc.SetAcl,
+		connect.WithSchema(switchServiceMethods.ByName("SetAcl")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteAclHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteAclProcedure,
+		svc.DeleteAcl,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteAcl")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceReorderAclHandler := connect.NewUnaryHandler(
+		SwitchServiceReorderAclProcedure,
+		svc.ReorderAcl,
+		connect.WithSchema(switchServiceMethods.ByName("ReorderAcl")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -437,6 +504,12 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetMirrorHandler.ServeHTTP(w, r)
 		case SwitchServiceDeleteMirrorProcedure:
 			switchServiceDeleteMirrorHandler.ServeHTTP(w, r)
+		case SwitchServiceSetAclProcedure:
+			switchServiceSetAclHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteAclProcedure:
+			switchServiceDeleteAclHandler.ServeHTTP(w, r)
+		case SwitchServiceReorderAclProcedure:
+			switchServiceReorderAclHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -504,4 +577,16 @@ func (UnimplementedSwitchServiceHandler) SetMirror(context.Context, *connect.Req
 
 func (UnimplementedSwitchServiceHandler) DeleteMirror(context.Context, *connect.Request[v1.DeleteMirrorRequest]) (*connect.Response[v1.DeleteMirrorResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteMirror is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetAcl(context.Context, *connect.Request[v1.SetAclRequest]) (*connect.Response[v1.SetAclResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetAcl is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteAcl(context.Context, *connect.Request[v1.DeleteAclRequest]) (*connect.Response[v1.DeleteAclResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteAcl is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) ReorderAcl(context.Context, *connect.Request[v1.ReorderAclRequest]) (*connect.Response[v1.ReorderAclResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.ReorderAcl is not implemented"))
 }
