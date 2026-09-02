@@ -422,6 +422,22 @@ message SetStormControlRequest {
   StormControlPort config = 2;
 }
 
+// SetQosRequest sets the switch-wide QoS egress scheduler discipline, aligned
+// with the openconfig-qos scheduler-policy config.
+message SetQosRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  QosSchedulerMode scheduler = 2;
+}
+
+// SetQosPortRequest sets one port's QoS classification (ingress trust mode and
+// default 802.1p priority for untrusted/untagged traffic), keyed by the port
+// index inside config. Aligns with the openconfig-qos interface classifier
+// config.
+message SetQosPortRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  QosPort config = 2;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -465,6 +481,14 @@ message SetStormControlResponse {
   SwitchDetail detail = 1;
 }
 
+message SetQosResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetQosPortResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -479,4 +503,6 @@ service SwitchService {
   rpc DeleteLag(DeleteLagRequest) returns (DeleteLagResponse);
   rpc SetIgmp(SetIgmpRequest) returns (SetIgmpResponse);
   rpc SetStormControl(SetStormControlRequest) returns (SetStormControlResponse);
+  rpc SetQos(SetQosRequest) returns (SetQosResponse);
+  rpc SetQosPort(SetQosPortRequest) returns (SetQosPortResponse);
 }
