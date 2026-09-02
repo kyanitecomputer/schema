@@ -87,6 +87,20 @@ const (
 	// SwitchServiceSetDot1XPortProcedure is the fully-qualified name of the SwitchService's
 	// SetDot1xPort RPC.
 	SwitchServiceSetDot1XPortProcedure = "/schema.v1.SwitchService/SetDot1xPort"
+	// SwitchServiceSetSnmpProcedure is the fully-qualified name of the SwitchService's SetSnmp RPC.
+	SwitchServiceSetSnmpProcedure = "/schema.v1.SwitchService/SetSnmp"
+	// SwitchServiceSetSnmpCommunityProcedure is the fully-qualified name of the SwitchService's
+	// SetSnmpCommunity RPC.
+	SwitchServiceSetSnmpCommunityProcedure = "/schema.v1.SwitchService/SetSnmpCommunity"
+	// SwitchServiceDeleteSnmpCommunityProcedure is the fully-qualified name of the SwitchService's
+	// DeleteSnmpCommunity RPC.
+	SwitchServiceDeleteSnmpCommunityProcedure = "/schema.v1.SwitchService/DeleteSnmpCommunity"
+	// SwitchServiceSetSnmpV3UserProcedure is the fully-qualified name of the SwitchService's
+	// SetSnmpV3User RPC.
+	SwitchServiceSetSnmpV3UserProcedure = "/schema.v1.SwitchService/SetSnmpV3User"
+	// SwitchServiceDeleteSnmpV3UserProcedure is the fully-qualified name of the SwitchService's
+	// DeleteSnmpV3User RPC.
+	SwitchServiceDeleteSnmpV3UserProcedure = "/schema.v1.SwitchService/DeleteSnmpV3User"
 )
 
 // SwitchServiceClient is a client for the schema.v1.SwitchService service.
@@ -113,6 +127,11 @@ type SwitchServiceClient interface {
 	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
 	SetDot1X(context.Context, *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error)
 	SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error)
+	SetSnmp(context.Context, *connect.Request[v1.SetSnmpRequest]) (*connect.Response[v1.SetSnmpResponse], error)
+	SetSnmpCommunity(context.Context, *connect.Request[v1.SetSnmpCommunityRequest]) (*connect.Response[v1.SetSnmpCommunityResponse], error)
+	DeleteSnmpCommunity(context.Context, *connect.Request[v1.DeleteSnmpCommunityRequest]) (*connect.Response[v1.DeleteSnmpCommunityResponse], error)
+	SetSnmpV3User(context.Context, *connect.Request[v1.SetSnmpV3UserRequest]) (*connect.Response[v1.SetSnmpV3UserResponse], error)
+	DeleteSnmpV3User(context.Context, *connect.Request[v1.DeleteSnmpV3UserRequest]) (*connect.Response[v1.DeleteSnmpV3UserResponse], error)
 }
 
 // NewSwitchServiceClient constructs a client for the schema.v1.SwitchService service. By default,
@@ -258,33 +277,68 @@ func NewSwitchServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(switchServiceMethods.ByName("SetDot1xPort")),
 			connect.WithClientOptions(opts...),
 		),
+		setSnmp: connect.NewClient[v1.SetSnmpRequest, v1.SetSnmpResponse](
+			httpClient,
+			baseURL+SwitchServiceSetSnmpProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetSnmp")),
+			connect.WithClientOptions(opts...),
+		),
+		setSnmpCommunity: connect.NewClient[v1.SetSnmpCommunityRequest, v1.SetSnmpCommunityResponse](
+			httpClient,
+			baseURL+SwitchServiceSetSnmpCommunityProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetSnmpCommunity")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteSnmpCommunity: connect.NewClient[v1.DeleteSnmpCommunityRequest, v1.DeleteSnmpCommunityResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteSnmpCommunityProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteSnmpCommunity")),
+			connect.WithClientOptions(opts...),
+		),
+		setSnmpV3User: connect.NewClient[v1.SetSnmpV3UserRequest, v1.SetSnmpV3UserResponse](
+			httpClient,
+			baseURL+SwitchServiceSetSnmpV3UserProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("SetSnmpV3User")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteSnmpV3User: connect.NewClient[v1.DeleteSnmpV3UserRequest, v1.DeleteSnmpV3UserResponse](
+			httpClient,
+			baseURL+SwitchServiceDeleteSnmpV3UserProcedure,
+			connect.WithSchema(switchServiceMethods.ByName("DeleteSnmpV3User")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // switchServiceClient implements SwitchServiceClient.
 type switchServiceClient struct {
-	getSwitch       *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
-	setPortAdmin    *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
-	setPortConfig   *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
-	setVlan         *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
-	deleteVlan      *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
-	setRstp         *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
-	setRstpPort     *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
-	setLag          *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
-	deleteLag       *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
-	setIgmp         *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
-	setStormControl *connect.Client[v1.SetStormControlRequest, v1.SetStormControlResponse]
-	setQos          *connect.Client[v1.SetQosRequest, v1.SetQosResponse]
-	setQosPort      *connect.Client[v1.SetQosPortRequest, v1.SetQosPortResponse]
-	setMirror       *connect.Client[v1.SetMirrorRequest, v1.SetMirrorResponse]
-	deleteMirror    *connect.Client[v1.DeleteMirrorRequest, v1.DeleteMirrorResponse]
-	setAcl          *connect.Client[v1.SetAclRequest, v1.SetAclResponse]
-	deleteAcl       *connect.Client[v1.DeleteAclRequest, v1.DeleteAclResponse]
-	reorderAcl      *connect.Client[v1.ReorderAclRequest, v1.ReorderAclResponse]
-	setErps         *connect.Client[v1.SetErpsRequest, v1.SetErpsResponse]
-	deleteErps      *connect.Client[v1.DeleteErpsRequest, v1.DeleteErpsResponse]
-	setDot1X        *connect.Client[v1.SetDot1XRequest, v1.SetDot1XResponse]
-	setDot1XPort    *connect.Client[v1.SetDot1XPortRequest, v1.SetDot1XPortResponse]
+	getSwitch           *connect.Client[v1.GetSwitchRequest, v1.GetSwitchResponse]
+	setPortAdmin        *connect.Client[v1.SetPortAdminRequest, v1.SetPortAdminResponse]
+	setPortConfig       *connect.Client[v1.SetPortConfigRequest, v1.SetPortConfigResponse]
+	setVlan             *connect.Client[v1.SetVlanRequest, v1.SetVlanResponse]
+	deleteVlan          *connect.Client[v1.DeleteVlanRequest, v1.DeleteVlanResponse]
+	setRstp             *connect.Client[v1.SetRstpRequest, v1.SetRstpResponse]
+	setRstpPort         *connect.Client[v1.SetRstpPortRequest, v1.SetRstpPortResponse]
+	setLag              *connect.Client[v1.SetLagRequest, v1.SetLagResponse]
+	deleteLag           *connect.Client[v1.DeleteLagRequest, v1.DeleteLagResponse]
+	setIgmp             *connect.Client[v1.SetIgmpRequest, v1.SetIgmpResponse]
+	setStormControl     *connect.Client[v1.SetStormControlRequest, v1.SetStormControlResponse]
+	setQos              *connect.Client[v1.SetQosRequest, v1.SetQosResponse]
+	setQosPort          *connect.Client[v1.SetQosPortRequest, v1.SetQosPortResponse]
+	setMirror           *connect.Client[v1.SetMirrorRequest, v1.SetMirrorResponse]
+	deleteMirror        *connect.Client[v1.DeleteMirrorRequest, v1.DeleteMirrorResponse]
+	setAcl              *connect.Client[v1.SetAclRequest, v1.SetAclResponse]
+	deleteAcl           *connect.Client[v1.DeleteAclRequest, v1.DeleteAclResponse]
+	reorderAcl          *connect.Client[v1.ReorderAclRequest, v1.ReorderAclResponse]
+	setErps             *connect.Client[v1.SetErpsRequest, v1.SetErpsResponse]
+	deleteErps          *connect.Client[v1.DeleteErpsRequest, v1.DeleteErpsResponse]
+	setDot1X            *connect.Client[v1.SetDot1XRequest, v1.SetDot1XResponse]
+	setDot1XPort        *connect.Client[v1.SetDot1XPortRequest, v1.SetDot1XPortResponse]
+	setSnmp             *connect.Client[v1.SetSnmpRequest, v1.SetSnmpResponse]
+	setSnmpCommunity    *connect.Client[v1.SetSnmpCommunityRequest, v1.SetSnmpCommunityResponse]
+	deleteSnmpCommunity *connect.Client[v1.DeleteSnmpCommunityRequest, v1.DeleteSnmpCommunityResponse]
+	setSnmpV3User       *connect.Client[v1.SetSnmpV3UserRequest, v1.SetSnmpV3UserResponse]
+	deleteSnmpV3User    *connect.Client[v1.DeleteSnmpV3UserRequest, v1.DeleteSnmpV3UserResponse]
 }
 
 // GetSwitch calls schema.v1.SwitchService.GetSwitch.
@@ -397,6 +451,31 @@ func (c *switchServiceClient) SetDot1XPort(ctx context.Context, req *connect.Req
 	return c.setDot1XPort.CallUnary(ctx, req)
 }
 
+// SetSnmp calls schema.v1.SwitchService.SetSnmp.
+func (c *switchServiceClient) SetSnmp(ctx context.Context, req *connect.Request[v1.SetSnmpRequest]) (*connect.Response[v1.SetSnmpResponse], error) {
+	return c.setSnmp.CallUnary(ctx, req)
+}
+
+// SetSnmpCommunity calls schema.v1.SwitchService.SetSnmpCommunity.
+func (c *switchServiceClient) SetSnmpCommunity(ctx context.Context, req *connect.Request[v1.SetSnmpCommunityRequest]) (*connect.Response[v1.SetSnmpCommunityResponse], error) {
+	return c.setSnmpCommunity.CallUnary(ctx, req)
+}
+
+// DeleteSnmpCommunity calls schema.v1.SwitchService.DeleteSnmpCommunity.
+func (c *switchServiceClient) DeleteSnmpCommunity(ctx context.Context, req *connect.Request[v1.DeleteSnmpCommunityRequest]) (*connect.Response[v1.DeleteSnmpCommunityResponse], error) {
+	return c.deleteSnmpCommunity.CallUnary(ctx, req)
+}
+
+// SetSnmpV3User calls schema.v1.SwitchService.SetSnmpV3User.
+func (c *switchServiceClient) SetSnmpV3User(ctx context.Context, req *connect.Request[v1.SetSnmpV3UserRequest]) (*connect.Response[v1.SetSnmpV3UserResponse], error) {
+	return c.setSnmpV3User.CallUnary(ctx, req)
+}
+
+// DeleteSnmpV3User calls schema.v1.SwitchService.DeleteSnmpV3User.
+func (c *switchServiceClient) DeleteSnmpV3User(ctx context.Context, req *connect.Request[v1.DeleteSnmpV3UserRequest]) (*connect.Response[v1.DeleteSnmpV3UserResponse], error) {
+	return c.deleteSnmpV3User.CallUnary(ctx, req)
+}
+
 // SwitchServiceHandler is an implementation of the schema.v1.SwitchService service.
 type SwitchServiceHandler interface {
 	GetSwitch(context.Context, *connect.Request[v1.GetSwitchRequest]) (*connect.Response[v1.GetSwitchResponse], error)
@@ -421,6 +500,11 @@ type SwitchServiceHandler interface {
 	DeleteErps(context.Context, *connect.Request[v1.DeleteErpsRequest]) (*connect.Response[v1.DeleteErpsResponse], error)
 	SetDot1X(context.Context, *connect.Request[v1.SetDot1XRequest]) (*connect.Response[v1.SetDot1XResponse], error)
 	SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error)
+	SetSnmp(context.Context, *connect.Request[v1.SetSnmpRequest]) (*connect.Response[v1.SetSnmpResponse], error)
+	SetSnmpCommunity(context.Context, *connect.Request[v1.SetSnmpCommunityRequest]) (*connect.Response[v1.SetSnmpCommunityResponse], error)
+	DeleteSnmpCommunity(context.Context, *connect.Request[v1.DeleteSnmpCommunityRequest]) (*connect.Response[v1.DeleteSnmpCommunityResponse], error)
+	SetSnmpV3User(context.Context, *connect.Request[v1.SetSnmpV3UserRequest]) (*connect.Response[v1.SetSnmpV3UserResponse], error)
+	DeleteSnmpV3User(context.Context, *connect.Request[v1.DeleteSnmpV3UserRequest]) (*connect.Response[v1.DeleteSnmpV3UserResponse], error)
 }
 
 // NewSwitchServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -562,6 +646,36 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(switchServiceMethods.ByName("SetDot1xPort")),
 		connect.WithHandlerOptions(opts...),
 	)
+	switchServiceSetSnmpHandler := connect.NewUnaryHandler(
+		SwitchServiceSetSnmpProcedure,
+		svc.SetSnmp,
+		connect.WithSchema(switchServiceMethods.ByName("SetSnmp")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceSetSnmpCommunityHandler := connect.NewUnaryHandler(
+		SwitchServiceSetSnmpCommunityProcedure,
+		svc.SetSnmpCommunity,
+		connect.WithSchema(switchServiceMethods.ByName("SetSnmpCommunity")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteSnmpCommunityHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteSnmpCommunityProcedure,
+		svc.DeleteSnmpCommunity,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteSnmpCommunity")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceSetSnmpV3UserHandler := connect.NewUnaryHandler(
+		SwitchServiceSetSnmpV3UserProcedure,
+		svc.SetSnmpV3User,
+		connect.WithSchema(switchServiceMethods.ByName("SetSnmpV3User")),
+		connect.WithHandlerOptions(opts...),
+	)
+	switchServiceDeleteSnmpV3UserHandler := connect.NewUnaryHandler(
+		SwitchServiceDeleteSnmpV3UserProcedure,
+		svc.DeleteSnmpV3User,
+		connect.WithSchema(switchServiceMethods.ByName("DeleteSnmpV3User")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/schema.v1.SwitchService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case SwitchServiceGetSwitchProcedure:
@@ -608,6 +722,16 @@ func NewSwitchServiceHandler(svc SwitchServiceHandler, opts ...connect.HandlerOp
 			switchServiceSetDot1XHandler.ServeHTTP(w, r)
 		case SwitchServiceSetDot1XPortProcedure:
 			switchServiceSetDot1XPortHandler.ServeHTTP(w, r)
+		case SwitchServiceSetSnmpProcedure:
+			switchServiceSetSnmpHandler.ServeHTTP(w, r)
+		case SwitchServiceSetSnmpCommunityProcedure:
+			switchServiceSetSnmpCommunityHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteSnmpCommunityProcedure:
+			switchServiceDeleteSnmpCommunityHandler.ServeHTTP(w, r)
+		case SwitchServiceSetSnmpV3UserProcedure:
+			switchServiceSetSnmpV3UserHandler.ServeHTTP(w, r)
+		case SwitchServiceDeleteSnmpV3UserProcedure:
+			switchServiceDeleteSnmpV3UserHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -703,4 +827,24 @@ func (UnimplementedSwitchServiceHandler) SetDot1X(context.Context, *connect.Requ
 
 func (UnimplementedSwitchServiceHandler) SetDot1XPort(context.Context, *connect.Request[v1.SetDot1XPortRequest]) (*connect.Response[v1.SetDot1XPortResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetDot1xPort is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetSnmp(context.Context, *connect.Request[v1.SetSnmpRequest]) (*connect.Response[v1.SetSnmpResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetSnmp is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetSnmpCommunity(context.Context, *connect.Request[v1.SetSnmpCommunityRequest]) (*connect.Response[v1.SetSnmpCommunityResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetSnmpCommunity is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteSnmpCommunity(context.Context, *connect.Request[v1.DeleteSnmpCommunityRequest]) (*connect.Response[v1.DeleteSnmpCommunityResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteSnmpCommunity is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) SetSnmpV3User(context.Context, *connect.Request[v1.SetSnmpV3UserRequest]) (*connect.Response[v1.SetSnmpV3UserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.SetSnmpV3User is not implemented"))
+}
+
+func (UnimplementedSwitchServiceHandler) DeleteSnmpV3User(context.Context, *connect.Request[v1.DeleteSnmpV3UserRequest]) (*connect.Response[v1.DeleteSnmpV3UserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("schema.v1.SwitchService.DeleteSnmpV3User is not implemented"))
 }
