@@ -495,6 +495,24 @@ message DeleteErpsRequest {
   uint32 id = 2;
 }
 
+// SetDot1xRequest sets the switch-wide 802.1X configuration: whether port-based
+// access control is enabled and the RADIUS server the authenticator proxies to.
+// Aligns with the openconfig 802.1X / AAA config. The per-port authenticated
+// flag in Dot1xConfig is operational and stays read-only.
+message SetDot1xRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  bool enabled = 2;
+  string radius_server = 3;
+}
+
+// SetDot1xPortRequest sets one port's 802.1X authorization mode (force
+// unauthorized / auto / force authorized).
+message SetDot1xPortRequest {
+  string node_id = 1 [(buf.validate.field).string.min_len = 1];
+  uint32 port = 2;
+  Dot1xPortState state = 3;
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -574,6 +592,14 @@ message DeleteErpsResponse {
   SwitchDetail detail = 1;
 }
 
+message SetDot1xResponse {
+  SwitchDetail detail = 1;
+}
+
+message SetDot1xPortResponse {
+  SwitchDetail detail = 1;
+}
+
 // SwitchService is the Tier 1 query + Tier 2 command surface for switch (Vega)
 // detail, served over ConnectRPC and answerable over NATS request/reply.
 service SwitchService {
@@ -597,4 +623,6 @@ service SwitchService {
   rpc ReorderAcl(ReorderAclRequest) returns (ReorderAclResponse);
   rpc SetErps(SetErpsRequest) returns (SetErpsResponse);
   rpc DeleteErps(DeleteErpsRequest) returns (DeleteErpsResponse);
+  rpc SetDot1x(SetDot1xRequest) returns (SetDot1xResponse);
+  rpc SetDot1xPort(SetDot1xPortRequest) returns (SetDot1xPortResponse);
 }

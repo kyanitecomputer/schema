@@ -3534,6 +3534,132 @@ func (x *DeleteErpsRequest) GetId() uint32 {
 	return 0
 }
 
+// SetDot1xRequest sets the switch-wide 802.1X configuration: whether port-based
+// access control is enabled and the RADIUS server the authenticator proxies to.
+// Aligns with the openconfig 802.1X / AAA config. The per-port authenticated
+// flag in Dot1xConfig is operational and stays read-only.
+type SetDot1XRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	Enabled       bool                   `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	RadiusServer  string                 `protobuf:"bytes,3,opt,name=radius_server,json=radiusServer,proto3" json:"radius_server,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDot1XRequest) Reset() {
+	*x = SetDot1XRequest{}
+	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDot1XRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDot1XRequest) ProtoMessage() {}
+
+func (x *SetDot1XRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDot1XRequest.ProtoReflect.Descriptor instead.
+func (*SetDot1XRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *SetDot1XRequest) GetNodeId() string {
+	if x != nil {
+		return x.NodeId
+	}
+	return ""
+}
+
+func (x *SetDot1XRequest) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
+func (x *SetDot1XRequest) GetRadiusServer() string {
+	if x != nil {
+		return x.RadiusServer
+	}
+	return ""
+}
+
+// SetDot1xPortRequest sets one port's 802.1X authorization mode (force
+// unauthorized / auto / force authorized).
+type SetDot1XPortRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	Port          uint32                 `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+	State         Dot1XPortState         `protobuf:"varint,3,opt,name=state,proto3,enum=schema.v1.Dot1XPortState" json:"state,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDot1XPortRequest) Reset() {
+	*x = SetDot1XPortRequest{}
+	mi := &file_schema_v1_switch_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDot1XPortRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDot1XPortRequest) ProtoMessage() {}
+
+func (x *SetDot1XPortRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDot1XPortRequest.ProtoReflect.Descriptor instead.
+func (*SetDot1XPortRequest) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *SetDot1XPortRequest) GetNodeId() string {
+	if x != nil {
+		return x.NodeId
+	}
+	return ""
+}
+
+func (x *SetDot1XPortRequest) GetPort() uint32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+func (x *SetDot1XPortRequest) GetState() Dot1XPortState {
+	if x != nil {
+		return x.State
+	}
+	return Dot1XPortState_DOT1X_PORT_STATE_UNSPECIFIED
+}
+
 // Each mutation returns the full switch detail so the client re-renders
 // authoritative state in one round trip. buf requires a distinct response type
 // per RPC.
@@ -3546,7 +3672,7 @@ type SetPortAdminResponse struct {
 
 func (x *SetPortAdminResponse) Reset() {
 	*x = SetPortAdminResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	mi := &file_schema_v1_switch_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3558,7 +3684,7 @@ func (x *SetPortAdminResponse) String() string {
 func (*SetPortAdminResponse) ProtoMessage() {}
 
 func (x *SetPortAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[42]
+	mi := &file_schema_v1_switch_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3571,7 +3697,7 @@ func (x *SetPortAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPortAdminResponse.ProtoReflect.Descriptor instead.
 func (*SetPortAdminResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{42}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *SetPortAdminResponse) GetDetail() *SwitchDetail {
@@ -3590,7 +3716,7 @@ type SetPortConfigResponse struct {
 
 func (x *SetPortConfigResponse) Reset() {
 	*x = SetPortConfigResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[43]
+	mi := &file_schema_v1_switch_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3602,7 +3728,7 @@ func (x *SetPortConfigResponse) String() string {
 func (*SetPortConfigResponse) ProtoMessage() {}
 
 func (x *SetPortConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[43]
+	mi := &file_schema_v1_switch_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3615,7 +3741,7 @@ func (x *SetPortConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPortConfigResponse.ProtoReflect.Descriptor instead.
 func (*SetPortConfigResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{43}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *SetPortConfigResponse) GetDetail() *SwitchDetail {
@@ -3634,7 +3760,7 @@ type SetVlanResponse struct {
 
 func (x *SetVlanResponse) Reset() {
 	*x = SetVlanResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[44]
+	mi := &file_schema_v1_switch_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3646,7 +3772,7 @@ func (x *SetVlanResponse) String() string {
 func (*SetVlanResponse) ProtoMessage() {}
 
 func (x *SetVlanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[44]
+	mi := &file_schema_v1_switch_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3659,7 +3785,7 @@ func (x *SetVlanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetVlanResponse.ProtoReflect.Descriptor instead.
 func (*SetVlanResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{44}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SetVlanResponse) GetDetail() *SwitchDetail {
@@ -3678,7 +3804,7 @@ type DeleteVlanResponse struct {
 
 func (x *DeleteVlanResponse) Reset() {
 	*x = DeleteVlanResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[45]
+	mi := &file_schema_v1_switch_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3690,7 +3816,7 @@ func (x *DeleteVlanResponse) String() string {
 func (*DeleteVlanResponse) ProtoMessage() {}
 
 func (x *DeleteVlanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[45]
+	mi := &file_schema_v1_switch_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3703,7 +3829,7 @@ func (x *DeleteVlanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteVlanResponse.ProtoReflect.Descriptor instead.
 func (*DeleteVlanResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{45}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *DeleteVlanResponse) GetDetail() *SwitchDetail {
@@ -3722,7 +3848,7 @@ type SetRstpResponse struct {
 
 func (x *SetRstpResponse) Reset() {
 	*x = SetRstpResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[46]
+	mi := &file_schema_v1_switch_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3734,7 +3860,7 @@ func (x *SetRstpResponse) String() string {
 func (*SetRstpResponse) ProtoMessage() {}
 
 func (x *SetRstpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[46]
+	mi := &file_schema_v1_switch_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3747,7 +3873,7 @@ func (x *SetRstpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRstpResponse.ProtoReflect.Descriptor instead.
 func (*SetRstpResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{46}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *SetRstpResponse) GetDetail() *SwitchDetail {
@@ -3766,7 +3892,7 @@ type SetRstpPortResponse struct {
 
 func (x *SetRstpPortResponse) Reset() {
 	*x = SetRstpPortResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[47]
+	mi := &file_schema_v1_switch_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3778,7 +3904,7 @@ func (x *SetRstpPortResponse) String() string {
 func (*SetRstpPortResponse) ProtoMessage() {}
 
 func (x *SetRstpPortResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[47]
+	mi := &file_schema_v1_switch_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3791,7 +3917,7 @@ func (x *SetRstpPortResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRstpPortResponse.ProtoReflect.Descriptor instead.
 func (*SetRstpPortResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{47}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *SetRstpPortResponse) GetDetail() *SwitchDetail {
@@ -3810,7 +3936,7 @@ type SetLagResponse struct {
 
 func (x *SetLagResponse) Reset() {
 	*x = SetLagResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[48]
+	mi := &file_schema_v1_switch_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3822,7 +3948,7 @@ func (x *SetLagResponse) String() string {
 func (*SetLagResponse) ProtoMessage() {}
 
 func (x *SetLagResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[48]
+	mi := &file_schema_v1_switch_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3835,7 +3961,7 @@ func (x *SetLagResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetLagResponse.ProtoReflect.Descriptor instead.
 func (*SetLagResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{48}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *SetLagResponse) GetDetail() *SwitchDetail {
@@ -3854,7 +3980,7 @@ type DeleteLagResponse struct {
 
 func (x *DeleteLagResponse) Reset() {
 	*x = DeleteLagResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[49]
+	mi := &file_schema_v1_switch_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3866,7 +3992,7 @@ func (x *DeleteLagResponse) String() string {
 func (*DeleteLagResponse) ProtoMessage() {}
 
 func (x *DeleteLagResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[49]
+	mi := &file_schema_v1_switch_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3879,7 +4005,7 @@ func (x *DeleteLagResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteLagResponse.ProtoReflect.Descriptor instead.
 func (*DeleteLagResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{49}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *DeleteLagResponse) GetDetail() *SwitchDetail {
@@ -3898,7 +4024,7 @@ type SetIgmpResponse struct {
 
 func (x *SetIgmpResponse) Reset() {
 	*x = SetIgmpResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[50]
+	mi := &file_schema_v1_switch_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3910,7 +4036,7 @@ func (x *SetIgmpResponse) String() string {
 func (*SetIgmpResponse) ProtoMessage() {}
 
 func (x *SetIgmpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[50]
+	mi := &file_schema_v1_switch_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3923,7 +4049,7 @@ func (x *SetIgmpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetIgmpResponse.ProtoReflect.Descriptor instead.
 func (*SetIgmpResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{50}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *SetIgmpResponse) GetDetail() *SwitchDetail {
@@ -3942,7 +4068,7 @@ type SetStormControlResponse struct {
 
 func (x *SetStormControlResponse) Reset() {
 	*x = SetStormControlResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[51]
+	mi := &file_schema_v1_switch_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3954,7 +4080,7 @@ func (x *SetStormControlResponse) String() string {
 func (*SetStormControlResponse) ProtoMessage() {}
 
 func (x *SetStormControlResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[51]
+	mi := &file_schema_v1_switch_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3967,7 +4093,7 @@ func (x *SetStormControlResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetStormControlResponse.ProtoReflect.Descriptor instead.
 func (*SetStormControlResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{51}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *SetStormControlResponse) GetDetail() *SwitchDetail {
@@ -3986,7 +4112,7 @@ type SetQosResponse struct {
 
 func (x *SetQosResponse) Reset() {
 	*x = SetQosResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[52]
+	mi := &file_schema_v1_switch_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3998,7 +4124,7 @@ func (x *SetQosResponse) String() string {
 func (*SetQosResponse) ProtoMessage() {}
 
 func (x *SetQosResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[52]
+	mi := &file_schema_v1_switch_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4011,7 +4137,7 @@ func (x *SetQosResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetQosResponse.ProtoReflect.Descriptor instead.
 func (*SetQosResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{52}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *SetQosResponse) GetDetail() *SwitchDetail {
@@ -4030,7 +4156,7 @@ type SetQosPortResponse struct {
 
 func (x *SetQosPortResponse) Reset() {
 	*x = SetQosPortResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[53]
+	mi := &file_schema_v1_switch_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4042,7 +4168,7 @@ func (x *SetQosPortResponse) String() string {
 func (*SetQosPortResponse) ProtoMessage() {}
 
 func (x *SetQosPortResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[53]
+	mi := &file_schema_v1_switch_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4055,7 +4181,7 @@ func (x *SetQosPortResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetQosPortResponse.ProtoReflect.Descriptor instead.
 func (*SetQosPortResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{53}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *SetQosPortResponse) GetDetail() *SwitchDetail {
@@ -4074,7 +4200,7 @@ type SetMirrorResponse struct {
 
 func (x *SetMirrorResponse) Reset() {
 	*x = SetMirrorResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[54]
+	mi := &file_schema_v1_switch_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4086,7 +4212,7 @@ func (x *SetMirrorResponse) String() string {
 func (*SetMirrorResponse) ProtoMessage() {}
 
 func (x *SetMirrorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[54]
+	mi := &file_schema_v1_switch_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4099,7 +4225,7 @@ func (x *SetMirrorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetMirrorResponse.ProtoReflect.Descriptor instead.
 func (*SetMirrorResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{54}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *SetMirrorResponse) GetDetail() *SwitchDetail {
@@ -4118,7 +4244,7 @@ type DeleteMirrorResponse struct {
 
 func (x *DeleteMirrorResponse) Reset() {
 	*x = DeleteMirrorResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[55]
+	mi := &file_schema_v1_switch_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4130,7 +4256,7 @@ func (x *DeleteMirrorResponse) String() string {
 func (*DeleteMirrorResponse) ProtoMessage() {}
 
 func (x *DeleteMirrorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[55]
+	mi := &file_schema_v1_switch_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4143,7 +4269,7 @@ func (x *DeleteMirrorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMirrorResponse.ProtoReflect.Descriptor instead.
 func (*DeleteMirrorResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{55}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *DeleteMirrorResponse) GetDetail() *SwitchDetail {
@@ -4162,7 +4288,7 @@ type SetAclResponse struct {
 
 func (x *SetAclResponse) Reset() {
 	*x = SetAclResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[56]
+	mi := &file_schema_v1_switch_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4174,7 +4300,7 @@ func (x *SetAclResponse) String() string {
 func (*SetAclResponse) ProtoMessage() {}
 
 func (x *SetAclResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[56]
+	mi := &file_schema_v1_switch_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4187,7 +4313,7 @@ func (x *SetAclResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAclResponse.ProtoReflect.Descriptor instead.
 func (*SetAclResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{56}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *SetAclResponse) GetDetail() *SwitchDetail {
@@ -4206,7 +4332,7 @@ type DeleteAclResponse struct {
 
 func (x *DeleteAclResponse) Reset() {
 	*x = DeleteAclResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[57]
+	mi := &file_schema_v1_switch_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4218,7 +4344,7 @@ func (x *DeleteAclResponse) String() string {
 func (*DeleteAclResponse) ProtoMessage() {}
 
 func (x *DeleteAclResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[57]
+	mi := &file_schema_v1_switch_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4231,7 +4357,7 @@ func (x *DeleteAclResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAclResponse.ProtoReflect.Descriptor instead.
 func (*DeleteAclResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{57}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *DeleteAclResponse) GetDetail() *SwitchDetail {
@@ -4250,7 +4376,7 @@ type ReorderAclResponse struct {
 
 func (x *ReorderAclResponse) Reset() {
 	*x = ReorderAclResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[58]
+	mi := &file_schema_v1_switch_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4262,7 +4388,7 @@ func (x *ReorderAclResponse) String() string {
 func (*ReorderAclResponse) ProtoMessage() {}
 
 func (x *ReorderAclResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[58]
+	mi := &file_schema_v1_switch_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4275,7 +4401,7 @@ func (x *ReorderAclResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReorderAclResponse.ProtoReflect.Descriptor instead.
 func (*ReorderAclResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{58}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ReorderAclResponse) GetDetail() *SwitchDetail {
@@ -4294,7 +4420,7 @@ type SetErpsResponse struct {
 
 func (x *SetErpsResponse) Reset() {
 	*x = SetErpsResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[59]
+	mi := &file_schema_v1_switch_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4306,7 +4432,7 @@ func (x *SetErpsResponse) String() string {
 func (*SetErpsResponse) ProtoMessage() {}
 
 func (x *SetErpsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[59]
+	mi := &file_schema_v1_switch_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4319,7 +4445,7 @@ func (x *SetErpsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetErpsResponse.ProtoReflect.Descriptor instead.
 func (*SetErpsResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{59}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *SetErpsResponse) GetDetail() *SwitchDetail {
@@ -4338,7 +4464,7 @@ type DeleteErpsResponse struct {
 
 func (x *DeleteErpsResponse) Reset() {
 	*x = DeleteErpsResponse{}
-	mi := &file_schema_v1_switch_proto_msgTypes[60]
+	mi := &file_schema_v1_switch_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4350,7 +4476,7 @@ func (x *DeleteErpsResponse) String() string {
 func (*DeleteErpsResponse) ProtoMessage() {}
 
 func (x *DeleteErpsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_v1_switch_proto_msgTypes[60]
+	mi := &file_schema_v1_switch_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4363,10 +4489,98 @@ func (x *DeleteErpsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteErpsResponse.ProtoReflect.Descriptor instead.
 func (*DeleteErpsResponse) Descriptor() ([]byte, []int) {
-	return file_schema_v1_switch_proto_rawDescGZIP(), []int{60}
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *DeleteErpsResponse) GetDetail() *SwitchDetail {
+	if x != nil {
+		return x.Detail
+	}
+	return nil
+}
+
+type SetDot1XResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Detail        *SwitchDetail          `protobuf:"bytes,1,opt,name=detail,proto3" json:"detail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDot1XResponse) Reset() {
+	*x = SetDot1XResponse{}
+	mi := &file_schema_v1_switch_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDot1XResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDot1XResponse) ProtoMessage() {}
+
+func (x *SetDot1XResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDot1XResponse.ProtoReflect.Descriptor instead.
+func (*SetDot1XResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *SetDot1XResponse) GetDetail() *SwitchDetail {
+	if x != nil {
+		return x.Detail
+	}
+	return nil
+}
+
+type SetDot1XPortResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Detail        *SwitchDetail          `protobuf:"bytes,1,opt,name=detail,proto3" json:"detail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDot1XPortResponse) Reset() {
+	*x = SetDot1XPortResponse{}
+	mi := &file_schema_v1_switch_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDot1XPortResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDot1XPortResponse) ProtoMessage() {}
+
+func (x *SetDot1XPortResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_v1_switch_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDot1XPortResponse.ProtoReflect.Descriptor instead.
+func (*SetDot1XPortResponse) Descriptor() ([]byte, []int) {
+	return file_schema_v1_switch_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *SetDot1XPortResponse) GetDetail() *SwitchDetail {
 	if x != nil {
 		return x.Detail
 	}
@@ -4581,7 +4795,15 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\xbaH\a*\x05\x18\xfe\x1f(\x01R\vcontrolVlan\"E\n" +
 	"\x11DeleteErpsRequest\x12 \n" +
 	"\anode_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06nodeId\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\rR\x02id\"G\n" +
+	"\x02id\x18\x02 \x01(\rR\x02id\"r\n" +
+	"\x0fSetDot1xRequest\x12 \n" +
+	"\anode_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06nodeId\x12\x18\n" +
+	"\aenabled\x18\x02 \x01(\bR\aenabled\x12#\n" +
+	"\rradius_server\x18\x03 \x01(\tR\fradiusServer\"|\n" +
+	"\x13SetDot1xPortRequest\x12 \n" +
+	"\anode_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06nodeId\x12\x12\n" +
+	"\x04port\x18\x02 \x01(\rR\x04port\x12/\n" +
+	"\x05state\x18\x03 \x01(\x0e2\x19.schema.v1.Dot1xPortStateR\x05state\"G\n" +
 	"\x14SetPortAdminResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"H\n" +
 	"\x15SetPortConfigResponse\x12/\n" +
@@ -4619,6 +4841,10 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\x0fSetErpsResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"E\n" +
 	"\x12DeleteErpsResponse\x12/\n" +
+	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"C\n" +
+	"\x10SetDot1xResponse\x12/\n" +
+	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail\"G\n" +
+	"\x14SetDot1xPortResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.schema.v1.SwitchDetailR\x06detail*\x87\x01\n" +
 	"\tPortMedia\x12\x1a\n" +
 	"\x16PORT_MEDIA_UNSPECIFIED\x10\x00\x12\x16\n" +
@@ -4689,7 +4915,7 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"\x1fSNMP_SECURITY_LEVEL_UNSPECIFIED\x10\x00\x12'\n" +
 	"#SNMP_SECURITY_LEVEL_NO_AUTH_NO_PRIV\x10\x01\x12$\n" +
 	" SNMP_SECURITY_LEVEL_AUTH_NO_PRIV\x10\x02\x12!\n" +
-	"\x1dSNMP_SECURITY_LEVEL_AUTH_PRIV\x10\x032\xbe\v\n" +
+	"\x1dSNMP_SECURITY_LEVEL_AUTH_PRIV\x10\x032\xd4\f\n" +
 	"\rSwitchService\x12F\n" +
 	"\tGetSwitch\x12\x1b.schema.v1.GetSwitchRequest\x1a\x1c.schema.v1.GetSwitchResponse\x12O\n" +
 	"\fSetPortAdmin\x12\x1e.schema.v1.SetPortAdminRequest\x1a\x1f.schema.v1.SetPortAdminResponse\x12R\n" +
@@ -4714,7 +4940,9 @@ const file_schema_v1_switch_proto_rawDesc = "" +
 	"ReorderAcl\x12\x1c.schema.v1.ReorderAclRequest\x1a\x1d.schema.v1.ReorderAclResponse\x12@\n" +
 	"\aSetErps\x12\x19.schema.v1.SetErpsRequest\x1a\x1a.schema.v1.SetErpsResponse\x12I\n" +
 	"\n" +
-	"DeleteErps\x12\x1c.schema.v1.DeleteErpsRequest\x1a\x1d.schema.v1.DeleteErpsResponseB\x98\x01\n" +
+	"DeleteErps\x12\x1c.schema.v1.DeleteErpsRequest\x1a\x1d.schema.v1.DeleteErpsResponse\x12C\n" +
+	"\bSetDot1x\x12\x1a.schema.v1.SetDot1xRequest\x1a\x1b.schema.v1.SetDot1xResponse\x12O\n" +
+	"\fSetDot1xPort\x12\x1e.schema.v1.SetDot1xPortRequest\x1a\x1f.schema.v1.SetDot1xPortResponseB\x98\x01\n" +
 	"\rcom.schema.v1B\vSwitchProtoP\x01Z5src.kyanite.computer/schema/gen/go/schema/v1;schemav1\xa2\x02\x03SXX\xaa\x02\tSchema.V1\xca\x02\tSchema\\V1\xe2\x02\x15Schema\\V1\\GPBMetadata\xea\x02\n" +
 	"Schema::V1b\x06proto3"
 
@@ -4731,7 +4959,7 @@ func file_schema_v1_switch_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_v1_switch_proto_enumTypes = make([]protoimpl.EnumInfo, 14)
-var file_schema_v1_switch_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
+var file_schema_v1_switch_proto_msgTypes = make([]protoimpl.MessageInfo, 65)
 var file_schema_v1_switch_proto_goTypes = []any{
 	(PortMedia)(0),                  // 0: schema.v1.PortMedia
 	(LinkState)(0),                  // 1: schema.v1.LinkState
@@ -4789,25 +5017,29 @@ var file_schema_v1_switch_proto_goTypes = []any{
 	(*ReorderAclRequest)(nil),       // 53: schema.v1.ReorderAclRequest
 	(*SetErpsRequest)(nil),          // 54: schema.v1.SetErpsRequest
 	(*DeleteErpsRequest)(nil),       // 55: schema.v1.DeleteErpsRequest
-	(*SetPortAdminResponse)(nil),    // 56: schema.v1.SetPortAdminResponse
-	(*SetPortConfigResponse)(nil),   // 57: schema.v1.SetPortConfigResponse
-	(*SetVlanResponse)(nil),         // 58: schema.v1.SetVlanResponse
-	(*DeleteVlanResponse)(nil),      // 59: schema.v1.DeleteVlanResponse
-	(*SetRstpResponse)(nil),         // 60: schema.v1.SetRstpResponse
-	(*SetRstpPortResponse)(nil),     // 61: schema.v1.SetRstpPortResponse
-	(*SetLagResponse)(nil),          // 62: schema.v1.SetLagResponse
-	(*DeleteLagResponse)(nil),       // 63: schema.v1.DeleteLagResponse
-	(*SetIgmpResponse)(nil),         // 64: schema.v1.SetIgmpResponse
-	(*SetStormControlResponse)(nil), // 65: schema.v1.SetStormControlResponse
-	(*SetQosResponse)(nil),          // 66: schema.v1.SetQosResponse
-	(*SetQosPortResponse)(nil),      // 67: schema.v1.SetQosPortResponse
-	(*SetMirrorResponse)(nil),       // 68: schema.v1.SetMirrorResponse
-	(*DeleteMirrorResponse)(nil),    // 69: schema.v1.DeleteMirrorResponse
-	(*SetAclResponse)(nil),          // 70: schema.v1.SetAclResponse
-	(*DeleteAclResponse)(nil),       // 71: schema.v1.DeleteAclResponse
-	(*ReorderAclResponse)(nil),      // 72: schema.v1.ReorderAclResponse
-	(*SetErpsResponse)(nil),         // 73: schema.v1.SetErpsResponse
-	(*DeleteErpsResponse)(nil),      // 74: schema.v1.DeleteErpsResponse
+	(*SetDot1XRequest)(nil),         // 56: schema.v1.SetDot1xRequest
+	(*SetDot1XPortRequest)(nil),     // 57: schema.v1.SetDot1xPortRequest
+	(*SetPortAdminResponse)(nil),    // 58: schema.v1.SetPortAdminResponse
+	(*SetPortConfigResponse)(nil),   // 59: schema.v1.SetPortConfigResponse
+	(*SetVlanResponse)(nil),         // 60: schema.v1.SetVlanResponse
+	(*DeleteVlanResponse)(nil),      // 61: schema.v1.DeleteVlanResponse
+	(*SetRstpResponse)(nil),         // 62: schema.v1.SetRstpResponse
+	(*SetRstpPortResponse)(nil),     // 63: schema.v1.SetRstpPortResponse
+	(*SetLagResponse)(nil),          // 64: schema.v1.SetLagResponse
+	(*DeleteLagResponse)(nil),       // 65: schema.v1.DeleteLagResponse
+	(*SetIgmpResponse)(nil),         // 66: schema.v1.SetIgmpResponse
+	(*SetStormControlResponse)(nil), // 67: schema.v1.SetStormControlResponse
+	(*SetQosResponse)(nil),          // 68: schema.v1.SetQosResponse
+	(*SetQosPortResponse)(nil),      // 69: schema.v1.SetQosPortResponse
+	(*SetMirrorResponse)(nil),       // 70: schema.v1.SetMirrorResponse
+	(*DeleteMirrorResponse)(nil),    // 71: schema.v1.DeleteMirrorResponse
+	(*SetAclResponse)(nil),          // 72: schema.v1.SetAclResponse
+	(*DeleteAclResponse)(nil),       // 73: schema.v1.DeleteAclResponse
+	(*ReorderAclResponse)(nil),      // 74: schema.v1.ReorderAclResponse
+	(*SetErpsResponse)(nil),         // 75: schema.v1.SetErpsResponse
+	(*DeleteErpsResponse)(nil),      // 76: schema.v1.DeleteErpsResponse
+	(*SetDot1XResponse)(nil),        // 77: schema.v1.SetDot1xResponse
+	(*SetDot1XPortResponse)(nil),    // 78: schema.v1.SetDot1xPortResponse
 }
 var file_schema_v1_switch_proto_depIdxs = []int32{
 	0,  // 0: schema.v1.SwitchPort.media:type_name -> schema.v1.PortMedia
@@ -4852,70 +5084,77 @@ var file_schema_v1_switch_proto_depIdxs = []int32{
 	23, // 39: schema.v1.SetQosPortRequest.config:type_name -> schema.v1.QosPort
 	25, // 40: schema.v1.SetMirrorRequest.session:type_name -> schema.v1.MirrorSession
 	26, // 41: schema.v1.SetAclRequest.rule:type_name -> schema.v1.AclRule
-	34, // 42: schema.v1.SetPortAdminResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 43: schema.v1.SetPortConfigResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 44: schema.v1.SetVlanResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 45: schema.v1.DeleteVlanResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 46: schema.v1.SetRstpResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 47: schema.v1.SetRstpPortResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 48: schema.v1.SetLagResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 49: schema.v1.DeleteLagResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 50: schema.v1.SetIgmpResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 51: schema.v1.SetStormControlResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 52: schema.v1.SetQosResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 53: schema.v1.SetQosPortResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 54: schema.v1.SetMirrorResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 55: schema.v1.DeleteMirrorResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 56: schema.v1.SetAclResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 57: schema.v1.DeleteAclResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 58: schema.v1.ReorderAclResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 59: schema.v1.SetErpsResponse.detail:type_name -> schema.v1.SwitchDetail
-	34, // 60: schema.v1.DeleteErpsResponse.detail:type_name -> schema.v1.SwitchDetail
-	35, // 61: schema.v1.SwitchService.GetSwitch:input_type -> schema.v1.GetSwitchRequest
-	37, // 62: schema.v1.SwitchService.SetPortAdmin:input_type -> schema.v1.SetPortAdminRequest
-	38, // 63: schema.v1.SwitchService.SetPortConfig:input_type -> schema.v1.SetPortConfigRequest
-	39, // 64: schema.v1.SwitchService.SetVlan:input_type -> schema.v1.SetVlanRequest
-	40, // 65: schema.v1.SwitchService.DeleteVlan:input_type -> schema.v1.DeleteVlanRequest
-	41, // 66: schema.v1.SwitchService.SetRstp:input_type -> schema.v1.SetRstpRequest
-	42, // 67: schema.v1.SwitchService.SetRstpPort:input_type -> schema.v1.SetRstpPortRequest
-	43, // 68: schema.v1.SwitchService.SetLag:input_type -> schema.v1.SetLagRequest
-	44, // 69: schema.v1.SwitchService.DeleteLag:input_type -> schema.v1.DeleteLagRequest
-	45, // 70: schema.v1.SwitchService.SetIgmp:input_type -> schema.v1.SetIgmpRequest
-	46, // 71: schema.v1.SwitchService.SetStormControl:input_type -> schema.v1.SetStormControlRequest
-	47, // 72: schema.v1.SwitchService.SetQos:input_type -> schema.v1.SetQosRequest
-	48, // 73: schema.v1.SwitchService.SetQosPort:input_type -> schema.v1.SetQosPortRequest
-	49, // 74: schema.v1.SwitchService.SetMirror:input_type -> schema.v1.SetMirrorRequest
-	50, // 75: schema.v1.SwitchService.DeleteMirror:input_type -> schema.v1.DeleteMirrorRequest
-	51, // 76: schema.v1.SwitchService.SetAcl:input_type -> schema.v1.SetAclRequest
-	52, // 77: schema.v1.SwitchService.DeleteAcl:input_type -> schema.v1.DeleteAclRequest
-	53, // 78: schema.v1.SwitchService.ReorderAcl:input_type -> schema.v1.ReorderAclRequest
-	54, // 79: schema.v1.SwitchService.SetErps:input_type -> schema.v1.SetErpsRequest
-	55, // 80: schema.v1.SwitchService.DeleteErps:input_type -> schema.v1.DeleteErpsRequest
-	36, // 81: schema.v1.SwitchService.GetSwitch:output_type -> schema.v1.GetSwitchResponse
-	56, // 82: schema.v1.SwitchService.SetPortAdmin:output_type -> schema.v1.SetPortAdminResponse
-	57, // 83: schema.v1.SwitchService.SetPortConfig:output_type -> schema.v1.SetPortConfigResponse
-	58, // 84: schema.v1.SwitchService.SetVlan:output_type -> schema.v1.SetVlanResponse
-	59, // 85: schema.v1.SwitchService.DeleteVlan:output_type -> schema.v1.DeleteVlanResponse
-	60, // 86: schema.v1.SwitchService.SetRstp:output_type -> schema.v1.SetRstpResponse
-	61, // 87: schema.v1.SwitchService.SetRstpPort:output_type -> schema.v1.SetRstpPortResponse
-	62, // 88: schema.v1.SwitchService.SetLag:output_type -> schema.v1.SetLagResponse
-	63, // 89: schema.v1.SwitchService.DeleteLag:output_type -> schema.v1.DeleteLagResponse
-	64, // 90: schema.v1.SwitchService.SetIgmp:output_type -> schema.v1.SetIgmpResponse
-	65, // 91: schema.v1.SwitchService.SetStormControl:output_type -> schema.v1.SetStormControlResponse
-	66, // 92: schema.v1.SwitchService.SetQos:output_type -> schema.v1.SetQosResponse
-	67, // 93: schema.v1.SwitchService.SetQosPort:output_type -> schema.v1.SetQosPortResponse
-	68, // 94: schema.v1.SwitchService.SetMirror:output_type -> schema.v1.SetMirrorResponse
-	69, // 95: schema.v1.SwitchService.DeleteMirror:output_type -> schema.v1.DeleteMirrorResponse
-	70, // 96: schema.v1.SwitchService.SetAcl:output_type -> schema.v1.SetAclResponse
-	71, // 97: schema.v1.SwitchService.DeleteAcl:output_type -> schema.v1.DeleteAclResponse
-	72, // 98: schema.v1.SwitchService.ReorderAcl:output_type -> schema.v1.ReorderAclResponse
-	73, // 99: schema.v1.SwitchService.SetErps:output_type -> schema.v1.SetErpsResponse
-	74, // 100: schema.v1.SwitchService.DeleteErps:output_type -> schema.v1.DeleteErpsResponse
-	81, // [81:101] is the sub-list for method output_type
-	61, // [61:81] is the sub-list for method input_type
-	61, // [61:61] is the sub-list for extension type_name
-	61, // [61:61] is the sub-list for extension extendee
-	0,  // [0:61] is the sub-list for field type_name
+	11, // 42: schema.v1.SetDot1xPortRequest.state:type_name -> schema.v1.Dot1xPortState
+	34, // 43: schema.v1.SetPortAdminResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 44: schema.v1.SetPortConfigResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 45: schema.v1.SetVlanResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 46: schema.v1.DeleteVlanResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 47: schema.v1.SetRstpResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 48: schema.v1.SetRstpPortResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 49: schema.v1.SetLagResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 50: schema.v1.DeleteLagResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 51: schema.v1.SetIgmpResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 52: schema.v1.SetStormControlResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 53: schema.v1.SetQosResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 54: schema.v1.SetQosPortResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 55: schema.v1.SetMirrorResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 56: schema.v1.DeleteMirrorResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 57: schema.v1.SetAclResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 58: schema.v1.DeleteAclResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 59: schema.v1.ReorderAclResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 60: schema.v1.SetErpsResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 61: schema.v1.DeleteErpsResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 62: schema.v1.SetDot1xResponse.detail:type_name -> schema.v1.SwitchDetail
+	34, // 63: schema.v1.SetDot1xPortResponse.detail:type_name -> schema.v1.SwitchDetail
+	35, // 64: schema.v1.SwitchService.GetSwitch:input_type -> schema.v1.GetSwitchRequest
+	37, // 65: schema.v1.SwitchService.SetPortAdmin:input_type -> schema.v1.SetPortAdminRequest
+	38, // 66: schema.v1.SwitchService.SetPortConfig:input_type -> schema.v1.SetPortConfigRequest
+	39, // 67: schema.v1.SwitchService.SetVlan:input_type -> schema.v1.SetVlanRequest
+	40, // 68: schema.v1.SwitchService.DeleteVlan:input_type -> schema.v1.DeleteVlanRequest
+	41, // 69: schema.v1.SwitchService.SetRstp:input_type -> schema.v1.SetRstpRequest
+	42, // 70: schema.v1.SwitchService.SetRstpPort:input_type -> schema.v1.SetRstpPortRequest
+	43, // 71: schema.v1.SwitchService.SetLag:input_type -> schema.v1.SetLagRequest
+	44, // 72: schema.v1.SwitchService.DeleteLag:input_type -> schema.v1.DeleteLagRequest
+	45, // 73: schema.v1.SwitchService.SetIgmp:input_type -> schema.v1.SetIgmpRequest
+	46, // 74: schema.v1.SwitchService.SetStormControl:input_type -> schema.v1.SetStormControlRequest
+	47, // 75: schema.v1.SwitchService.SetQos:input_type -> schema.v1.SetQosRequest
+	48, // 76: schema.v1.SwitchService.SetQosPort:input_type -> schema.v1.SetQosPortRequest
+	49, // 77: schema.v1.SwitchService.SetMirror:input_type -> schema.v1.SetMirrorRequest
+	50, // 78: schema.v1.SwitchService.DeleteMirror:input_type -> schema.v1.DeleteMirrorRequest
+	51, // 79: schema.v1.SwitchService.SetAcl:input_type -> schema.v1.SetAclRequest
+	52, // 80: schema.v1.SwitchService.DeleteAcl:input_type -> schema.v1.DeleteAclRequest
+	53, // 81: schema.v1.SwitchService.ReorderAcl:input_type -> schema.v1.ReorderAclRequest
+	54, // 82: schema.v1.SwitchService.SetErps:input_type -> schema.v1.SetErpsRequest
+	55, // 83: schema.v1.SwitchService.DeleteErps:input_type -> schema.v1.DeleteErpsRequest
+	56, // 84: schema.v1.SwitchService.SetDot1x:input_type -> schema.v1.SetDot1xRequest
+	57, // 85: schema.v1.SwitchService.SetDot1xPort:input_type -> schema.v1.SetDot1xPortRequest
+	36, // 86: schema.v1.SwitchService.GetSwitch:output_type -> schema.v1.GetSwitchResponse
+	58, // 87: schema.v1.SwitchService.SetPortAdmin:output_type -> schema.v1.SetPortAdminResponse
+	59, // 88: schema.v1.SwitchService.SetPortConfig:output_type -> schema.v1.SetPortConfigResponse
+	60, // 89: schema.v1.SwitchService.SetVlan:output_type -> schema.v1.SetVlanResponse
+	61, // 90: schema.v1.SwitchService.DeleteVlan:output_type -> schema.v1.DeleteVlanResponse
+	62, // 91: schema.v1.SwitchService.SetRstp:output_type -> schema.v1.SetRstpResponse
+	63, // 92: schema.v1.SwitchService.SetRstpPort:output_type -> schema.v1.SetRstpPortResponse
+	64, // 93: schema.v1.SwitchService.SetLag:output_type -> schema.v1.SetLagResponse
+	65, // 94: schema.v1.SwitchService.DeleteLag:output_type -> schema.v1.DeleteLagResponse
+	66, // 95: schema.v1.SwitchService.SetIgmp:output_type -> schema.v1.SetIgmpResponse
+	67, // 96: schema.v1.SwitchService.SetStormControl:output_type -> schema.v1.SetStormControlResponse
+	68, // 97: schema.v1.SwitchService.SetQos:output_type -> schema.v1.SetQosResponse
+	69, // 98: schema.v1.SwitchService.SetQosPort:output_type -> schema.v1.SetQosPortResponse
+	70, // 99: schema.v1.SwitchService.SetMirror:output_type -> schema.v1.SetMirrorResponse
+	71, // 100: schema.v1.SwitchService.DeleteMirror:output_type -> schema.v1.DeleteMirrorResponse
+	72, // 101: schema.v1.SwitchService.SetAcl:output_type -> schema.v1.SetAclResponse
+	73, // 102: schema.v1.SwitchService.DeleteAcl:output_type -> schema.v1.DeleteAclResponse
+	74, // 103: schema.v1.SwitchService.ReorderAcl:output_type -> schema.v1.ReorderAclResponse
+	75, // 104: schema.v1.SwitchService.SetErps:output_type -> schema.v1.SetErpsResponse
+	76, // 105: schema.v1.SwitchService.DeleteErps:output_type -> schema.v1.DeleteErpsResponse
+	77, // 106: schema.v1.SwitchService.SetDot1x:output_type -> schema.v1.SetDot1xResponse
+	78, // 107: schema.v1.SwitchService.SetDot1xPort:output_type -> schema.v1.SetDot1xPortResponse
+	86, // [86:108] is the sub-list for method output_type
+	64, // [64:86] is the sub-list for method input_type
+	64, // [64:64] is the sub-list for extension type_name
+	64, // [64:64] is the sub-list for extension extendee
+	0,  // [0:64] is the sub-list for field type_name
 }
 
 func init() { file_schema_v1_switch_proto_init() }
@@ -4929,7 +5168,7 @@ func file_schema_v1_switch_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schema_v1_switch_proto_rawDesc), len(file_schema_v1_switch_proto_rawDesc)),
 			NumEnums:      14,
-			NumMessages:   61,
+			NumMessages:   65,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

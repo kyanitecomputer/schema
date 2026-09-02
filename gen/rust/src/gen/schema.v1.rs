@@ -23129,6 +23129,330 @@ impl ::buffa::ExtensionSet for DeleteErpsRequest {
         &mut self.__buffa_unknown_fields
     }
 }
+/// SetDot1xRequest sets the switch-wide 802.1X configuration: whether port-based
+/// access control is enabled and the RADIUS server the authenticator proxies to.
+/// Aligns with the openconfig 802.1X / AAA config. The per-port authenticated
+/// flag in Dot1xConfig is operational and stays read-only.
+#[derive(Clone, PartialEq, Default)]
+pub struct SetDot1xRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `enabled`
+    pub enabled: bool,
+    /// Field 3: `radius_server`
+    pub radius_server: ::buffa::alloc::string::String,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetDot1xRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetDot1xRequest")
+            .field("node_id", &self.node_id)
+            .field("enabled", &self.enabled)
+            .field("radius_server", &self.radius_server)
+            .finish()
+    }
+}
+impl SetDot1xRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xRequest";
+}
+impl ::buffa::DefaultInstance for SetDot1xRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetDot1xRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetDot1xRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetDot1xRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetDot1xRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xRequest";
+}
+impl ::buffa::Message for SetDot1xRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.enabled {
+            size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+        }
+        if !self.radius_server.is_empty() {
+            size
+                += 1u32 + ::buffa::types::string_encoded_len(&self.radius_server) as u32;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.enabled {
+            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
+                .encode(buf);
+            ::buffa::types::encode_bool(self.enabled, buf);
+        }
+        if !self.radius_server.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    3u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.radius_server, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.enabled = ::buffa::types::decode_bool(buf)?;
+            }
+            3u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 3u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.radius_server, buf)?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.enabled = false;
+        self.radius_server.clear();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetDot1xRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetDot1xRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+/// SetDot1xPortRequest sets one port's 802.1X authorization mode (force
+/// unauthorized / auto / force authorized).
+#[derive(Clone, PartialEq, Default)]
+pub struct SetDot1xPortRequest {
+    /// Field 1: `node_id`
+    pub node_id: ::buffa::alloc::string::String,
+    /// Field 2: `port`
+    pub port: u32,
+    /// Field 3: `state`
+    pub state: ::buffa::EnumValue<Dot1xPortState>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetDot1xPortRequest {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetDot1xPortRequest")
+            .field("node_id", &self.node_id)
+            .field("port", &self.port)
+            .field("state", &self.state)
+            .finish()
+    }
+}
+impl SetDot1xPortRequest {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortRequest";
+}
+impl ::buffa::DefaultInstance for SetDot1xPortRequest {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetDot1xPortRequest> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetDot1xPortRequest {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetDot1xPortRequest";
+    const FULL_NAME: &'static str = "schema.v1.SetDot1xPortRequest";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortRequest";
+}
+impl ::buffa::Message for SetDot1xPortRequest {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if !self.node_id.is_empty() {
+            size += 1u32 + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+        }
+        if self.port != 0u32 {
+            size += 1u32 + ::buffa::types::uint32_encoded_len(self.port) as u32;
+        }
+        {
+            let val = self.state.to_i32();
+            if val != 0 {
+                size += 1u32 + ::buffa::types::int32_encoded_len(val) as u32;
+            }
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        _cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if !self.node_id.is_empty() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::types::encode_string(&self.node_id, buf);
+        }
+        if self.port != 0u32 {
+            ::buffa::encoding::Tag::new(2u32, ::buffa::encoding::WireType::Varint)
+                .encode(buf);
+            ::buffa::types::encode_uint32(self.port, buf);
+        }
+        {
+            let val = self.state.to_i32();
+            if val != 0 {
+                ::buffa::encoding::Tag::new(3u32, ::buffa::encoding::WireType::Varint)
+                    .encode(buf);
+                ::buffa::types::encode_int32(val, buf);
+            }
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::types::merge_string(&mut self.node_id, buf)?;
+            }
+            2u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 2u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.port = ::buffa::types::decode_uint32(buf)?;
+            }
+            3u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 3u32,
+                        expected: 0u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                self.state = ::buffa::EnumValue::from(
+                    ::buffa::types::decode_int32(buf)?,
+                );
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.node_id.clear();
+        self.port = 0u32;
+        self.state = ::buffa::EnumValue::from(0);
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetDot1xPortRequest {
+    const PROTO_FQN: &'static str = "schema.v1.SetDot1xPortRequest";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
 /// Each mutation returns the full switch detail so the client re-renders
 /// authoritative state in one round trip. buf requires a distinct response type
 /// per RPC.
@@ -25348,6 +25672,240 @@ impl ::buffa::Message for DeleteErpsResponse {
 }
 impl ::buffa::ExtensionSet for DeleteErpsResponse {
     const PROTO_FQN: &'static str = "schema.v1.DeleteErpsResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetDot1xResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetDot1xResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetDot1xResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetDot1xResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xResponse";
+}
+impl ::buffa::DefaultInstance for SetDot1xResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetDot1xResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetDot1xResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetDot1xResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetDot1xResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xResponse";
+}
+impl ::buffa::Message for SetDot1xResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetDot1xResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetDot1xResponse";
+    fn unknown_fields(&self) -> &::buffa::UnknownFields {
+        &self.__buffa_unknown_fields
+    }
+    fn unknown_fields_mut(&mut self) -> &mut ::buffa::UnknownFields {
+        &mut self.__buffa_unknown_fields
+    }
+}
+#[derive(Clone, PartialEq, Default)]
+pub struct SetDot1xPortResponse {
+    /// Field 1: `detail`
+    pub detail: ::buffa::MessageField<SwitchDetail>,
+    #[doc(hidden)]
+    pub __buffa_unknown_fields: ::buffa::UnknownFields,
+}
+impl ::core::fmt::Debug for SetDot1xPortResponse {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        f.debug_struct("SetDot1xPortResponse").field("detail", &self.detail).finish()
+    }
+}
+impl SetDot1xPortResponse {
+    /// Protobuf type URL for this message, for use with `Any::pack` and
+    /// `Any::unpack_if`.
+    ///
+    /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
+    pub const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortResponse";
+}
+impl ::buffa::DefaultInstance for SetDot1xPortResponse {
+    fn default_instance() -> &'static Self {
+        static VALUE: ::buffa::__private::OnceBox<SetDot1xPortResponse> = ::buffa::__private::OnceBox::new();
+        VALUE.get_or_init(|| ::buffa::alloc::boxed::Box::new(Self::default()))
+    }
+}
+impl ::buffa::MessageName for SetDot1xPortResponse {
+    const PACKAGE: &'static str = "schema.v1";
+    const NAME: &'static str = "SetDot1xPortResponse";
+    const FULL_NAME: &'static str = "schema.v1.SetDot1xPortResponse";
+    const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortResponse";
+}
+impl ::buffa::Message for SetDot1xPortResponse {
+    /// Returns the total encoded size in bytes.
+    ///
+    /// The result is a `u32`; the protobuf specification requires all
+    /// messages to fit within 2 GiB (2,147,483,647 bytes), so a
+    /// compliant message will never overflow this type.
+    #[allow(clippy::let_and_return)]
+    fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        let mut size = 0u32;
+        if self.detail.is_set() {
+            let __slot = __cache.reserve();
+            let inner_size = self.detail.compute_size(__cache);
+            __cache.set(__slot, inner_size);
+            size
+                += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                    + inner_size;
+        }
+        size += self.__buffa_unknown_fields.encoded_len() as u32;
+        size
+    }
+    fn write_to(
+        &self,
+        __cache: &mut ::buffa::SizeCache,
+        buf: &mut impl ::buffa::bytes::BufMut,
+    ) {
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        if self.detail.is_set() {
+            ::buffa::encoding::Tag::new(
+                    1u32,
+                    ::buffa::encoding::WireType::LengthDelimited,
+                )
+                .encode(buf);
+            ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+            self.detail.write_to(__cache, buf);
+        }
+        self.__buffa_unknown_fields.write_to(buf);
+    }
+    fn merge_field(
+        &mut self,
+        tag: ::buffa::encoding::Tag,
+        buf: &mut impl ::buffa::bytes::Buf,
+        depth: u32,
+    ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+        #[allow(unused_imports)]
+        use ::buffa::bytes::Buf as _;
+        #[allow(unused_imports)]
+        use ::buffa::Enumeration as _;
+        match tag.field_number() {
+            1u32 => {
+                if tag.wire_type() != ::buffa::encoding::WireType::LengthDelimited {
+                    return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                        field_number: 1u32,
+                        expected: 2u8,
+                        actual: tag.wire_type() as u8,
+                    });
+                }
+                ::buffa::Message::merge_length_delimited(
+                    self.detail.get_or_insert_default(),
+                    buf,
+                    depth,
+                )?;
+            }
+            _ => {
+                self.__buffa_unknown_fields
+                    .push(::buffa::encoding::decode_unknown_field(tag, buf, depth)?);
+            }
+        }
+        ::core::result::Result::Ok(())
+    }
+    fn clear(&mut self) {
+        self.detail = ::buffa::MessageField::none();
+        self.__buffa_unknown_fields.clear();
+    }
+}
+impl ::buffa::ExtensionSet for SetDot1xPortResponse {
+    const PROTO_FQN: &'static str = "schema.v1.SetDot1xPortResponse";
     fn unknown_fields(&self) -> &::buffa::UnknownFields {
         &self.__buffa_unknown_fields
     }
@@ -71725,6 +72283,673 @@ pub mod __buffa {
             type View<'a> = DeleteErpsRequestView<'a>;
             type ViewHandle = DeleteErpsRequestOwnedView;
         }
+        /// SetDot1xRequest sets the switch-wide 802.1X configuration: whether port-based
+        /// access control is enabled and the RADIUS server the authenticator proxies to.
+        /// Aligns with the openconfig 802.1X / AAA config. The per-port authenticated
+        /// flag in Dot1xConfig is operational and stays read-only.
+        #[derive(Clone, Debug, Default)]
+        pub struct SetDot1xRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `enabled`
+            pub enabled: bool,
+            /// Field 3: `radius_server`
+            pub radius_server: &'a str,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetDot1xRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.enabled = ::buffa::types::decode_bool(&mut cur)?;
+                        }
+                        3u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 3u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.radius_server = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetDot1xRequestView<'a> {
+            type Owned = super::super::SetDot1xRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetDot1xRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetDot1xRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetDot1xRequest {
+                    node_id: self.node_id.to_string(),
+                    enabled: self.enabled,
+                    radius_server: self.radius_server.to_string(),
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetDot1xRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.enabled {
+                    size += 1u32 + ::buffa::types::BOOL_ENCODED_LEN as u32;
+                }
+                if !self.radius_server.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.radius_server)
+                                as u32;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.enabled {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::Varint,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_bool(self.enabled, buf);
+                }
+                if !self.radius_server.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            3u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.radius_server, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetDot1xRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetDot1xRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetDot1xRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetDot1xRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetDot1xRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetDot1xRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetDot1xRequestView<'static> {
+            type Reborrowed<'b> = SetDot1xRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetDot1xRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetDot1xRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetDot1xRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetDot1xRequestOwnedView(
+            ::buffa::OwnedView<SetDot1xRequestView<'static>>,
+        );
+        impl SetDot1xRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetDot1xRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xRequestOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetDot1xRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetDot1xRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetDot1xRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `enabled`
+            #[must_use]
+            pub fn enabled(&self) -> bool {
+                self.0.reborrow().enabled
+            }
+            /// Field 3: `radius_server`
+            #[must_use]
+            pub fn radius_server(&self) -> &'_ str {
+                self.0.reborrow().radius_server
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetDot1xRequestView<'static>>>
+        for SetDot1xRequestOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetDot1xRequestView<'static>>) -> Self {
+                SetDot1xRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetDot1xRequestOwnedView>
+        for ::buffa::OwnedView<SetDot1xRequestView<'static>> {
+            fn from(wrapper: SetDot1xRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetDot1xRequestView<'static>>>
+        for SetDot1xRequestOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetDot1xRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetDot1xRequest {
+            type View<'a> = SetDot1xRequestView<'a>;
+            type ViewHandle = SetDot1xRequestOwnedView;
+        }
+        /// SetDot1xPortRequest sets one port's 802.1X authorization mode (force
+        /// unauthorized / auto / force authorized).
+        #[derive(Clone, Debug, Default)]
+        pub struct SetDot1xPortRequestView<'a> {
+            /// Field 1: `node_id`
+            pub node_id: &'a str,
+            /// Field 2: `port`
+            pub port: u32,
+            /// Field 3: `state`
+            pub state: ::buffa::EnumValue<super::super::Dot1xPortState>,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetDot1xPortRequestView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.node_id = ::buffa::types::borrow_str(&mut cur)?;
+                        }
+                        2u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 2u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.port = ::buffa::types::decode_uint32(&mut cur)?;
+                        }
+                        3u32 => {
+                            if tag.wire_type() != ::buffa::encoding::WireType::Varint {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 3u32,
+                                    expected: 0u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            view.state = ::buffa::EnumValue::from(
+                                ::buffa::types::decode_int32(&mut cur)?,
+                            );
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetDot1xPortRequestView<'a> {
+            type Owned = super::super::SetDot1xPortRequest;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetDot1xPortRequest {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetDot1xPortRequest {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetDot1xPortRequest {
+                    node_id: self.node_id.to_string(),
+                    port: self.port,
+                    state: self.state,
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetDot1xPortRequestView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, _cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if !self.node_id.is_empty() {
+                    size
+                        += 1u32
+                            + ::buffa::types::string_encoded_len(&self.node_id) as u32;
+                }
+                if self.port != 0u32 {
+                    size += 1u32 + ::buffa::types::uint32_encoded_len(self.port) as u32;
+                }
+                {
+                    let val = self.state.to_i32();
+                    if val != 0 {
+                        size += 1u32 + ::buffa::types::int32_encoded_len(val) as u32;
+                    }
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                _cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if !self.node_id.is_empty() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_string(&self.node_id, buf);
+                }
+                if self.port != 0u32 {
+                    ::buffa::encoding::Tag::new(
+                            2u32,
+                            ::buffa::encoding::WireType::Varint,
+                        )
+                        .encode(buf);
+                    ::buffa::types::encode_uint32(self.port, buf);
+                }
+                {
+                    let val = self.state.to_i32();
+                    if val != 0 {
+                        ::buffa::encoding::Tag::new(
+                                3u32,
+                                ::buffa::encoding::WireType::Varint,
+                            )
+                            .encode(buf);
+                        ::buffa::types::encode_int32(val, buf);
+                    }
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetDot1xPortRequestView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetDot1xPortRequest";
+            const FULL_NAME: &'static str = "schema.v1.SetDot1xPortRequest";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortRequest";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetDot1xPortRequestView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetDot1xPortRequestView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetDot1xPortRequestView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetDot1xPortRequestView<'static> {
+            type Reborrowed<'b> = SetDot1xPortRequestView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetDot1xPortRequest` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetDot1xPortRequestView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetDot1xPortRequestView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetDot1xPortRequestOwnedView(
+            ::buffa::OwnedView<SetDot1xPortRequestView<'static>>,
+        );
+        impl SetDot1xPortRequestOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortRequestOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortRequestOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetDot1xPortRequest,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortRequestOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetDot1xPortRequestView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetDot1xPortRequestView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetDot1xPortRequest {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `node_id`
+            #[must_use]
+            pub fn node_id(&self) -> &'_ str {
+                self.0.reborrow().node_id
+            }
+            /// Field 2: `port`
+            #[must_use]
+            pub fn port(&self) -> u32 {
+                self.0.reborrow().port
+            }
+            /// Field 3: `state`
+            #[must_use]
+            pub fn state(&self) -> ::buffa::EnumValue<super::super::Dot1xPortState> {
+                self.0.reborrow().state
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetDot1xPortRequestView<'static>>>
+        for SetDot1xPortRequestOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetDot1xPortRequestView<'static>>,
+            ) -> Self {
+                SetDot1xPortRequestOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetDot1xPortRequestOwnedView>
+        for ::buffa::OwnedView<SetDot1xPortRequestView<'static>> {
+            fn from(wrapper: SetDot1xPortRequestOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetDot1xPortRequestView<'static>>>
+        for SetDot1xPortRequestOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetDot1xPortRequestView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetDot1xPortRequest {
+            type View<'a> = SetDot1xPortRequestView<'a>;
+            type ViewHandle = SetDot1xPortRequestOwnedView;
+        }
         /// Each mutation returns the full switch detail so the client re-renders
         /// authoritative state in one round trip. buf requires a distinct response type
         /// per RPC.
@@ -77366,6 +78591,601 @@ pub mod __buffa {
             type View<'a> = DeleteErpsResponseView<'a>;
             type ViewHandle = DeleteErpsResponseOwnedView;
         }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetDot1xResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetDot1xResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetDot1xResponseView<'a> {
+            type Owned = super::super::SetDot1xResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetDot1xResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetDot1xResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetDot1xResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetDot1xResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetDot1xResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetDot1xResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetDot1xResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetDot1xResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetDot1xResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetDot1xResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetDot1xResponseView<'static> {
+            type Reborrowed<'b> = SetDot1xResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetDot1xResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetDot1xResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetDot1xResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetDot1xResponseOwnedView(
+            ::buffa::OwnedView<SetDot1xResponseView<'static>>,
+        );
+        impl SetDot1xResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetDot1xResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xResponseOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetDot1xResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetDot1xResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetDot1xResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetDot1xResponseView<'static>>>
+        for SetDot1xResponseOwnedView {
+            fn from(inner: ::buffa::OwnedView<SetDot1xResponseView<'static>>) -> Self {
+                SetDot1xResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetDot1xResponseOwnedView>
+        for ::buffa::OwnedView<SetDot1xResponseView<'static>> {
+            fn from(wrapper: SetDot1xResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<::buffa::OwnedView<SetDot1xResponseView<'static>>>
+        for SetDot1xResponseOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetDot1xResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetDot1xResponse {
+            type View<'a> = SetDot1xResponseView<'a>;
+            type ViewHandle = SetDot1xResponseOwnedView;
+        }
+        #[derive(Clone, Debug, Default)]
+        pub struct SetDot1xPortResponseView<'a> {
+            /// Field 1: `detail`
+            pub detail: ::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'a>,
+            >,
+            pub __buffa_unknown_fields: ::buffa::UnknownFieldsView<'a>,
+        }
+        impl<'a> SetDot1xPortResponseView<'a> {
+            /// Decode from `buf`, enforcing a recursion depth limit for nested messages.
+            ///
+            /// Called by [`::buffa::MessageView::decode_view`] with [`::buffa::RECURSION_LIMIT`]
+            /// and by generated sub-message decode arms with `depth - 1`.
+            ///
+            /// **Not part of the public API.** Named with a leading underscore to
+            /// signal that it is for generated-code use only.
+            #[doc(hidden)]
+            pub fn _decode_depth(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                let mut view = Self::default();
+                view._merge_into_view(buf, depth)?;
+                ::core::result::Result::Ok(view)
+            }
+            /// Merge fields from `buf` into this view (proto merge semantics).
+            ///
+            /// Repeated fields append; singular fields last-wins; singular
+            /// MESSAGE fields merge recursively. Used by sub-message decode
+            /// arms when the same field appears multiple times on the wire.
+            ///
+            /// **Not part of the public API.**
+            #[doc(hidden)]
+            pub fn _merge_into_view(
+                &mut self,
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<(), ::buffa::DecodeError> {
+                let _ = depth;
+                #[allow(unused_variables)]
+                let view = self;
+                let mut cur: &'a [u8] = buf;
+                while !cur.is_empty() {
+                    let before_tag = cur;
+                    let tag = ::buffa::encoding::Tag::decode(&mut cur)?;
+                    match tag.field_number() {
+                        1u32 => {
+                            if tag.wire_type()
+                                != ::buffa::encoding::WireType::LengthDelimited
+                            {
+                                return ::core::result::Result::Err(::buffa::DecodeError::WireTypeMismatch {
+                                    field_number: 1u32,
+                                    expected: 2u8,
+                                    actual: tag.wire_type() as u8,
+                                });
+                            }
+                            if depth == 0 {
+                                return Err(::buffa::DecodeError::RecursionLimitExceeded);
+                            }
+                            let sub = ::buffa::types::borrow_bytes(&mut cur)?;
+                            match view.detail.as_mut() {
+                                Some(existing) => existing._merge_into_view(sub, depth - 1)?,
+                                None => {
+                                    view.detail = ::buffa::MessageFieldView::set(
+                                        super::super::__buffa::view::SwitchDetailView::_decode_depth(
+                                            sub,
+                                            depth - 1,
+                                        )?,
+                                    );
+                                }
+                            }
+                        }
+                        _ => {
+                            ::buffa::encoding::skip_field_depth(tag, &mut cur, depth)?;
+                            let span_len = before_tag.len() - cur.len();
+                            view.__buffa_unknown_fields
+                                .push_raw(&before_tag[..span_len]);
+                        }
+                    }
+                }
+                ::core::result::Result::Ok(())
+            }
+        }
+        impl<'a> ::buffa::MessageView<'a> for SetDot1xPortResponseView<'a> {
+            type Owned = super::super::SetDot1xPortResponse;
+            fn decode_view(
+                buf: &'a [u8],
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, ::buffa::RECURSION_LIMIT)
+            }
+            fn decode_view_with_limit(
+                buf: &'a [u8],
+                depth: u32,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                Self::_decode_depth(buf, depth)
+            }
+            fn to_owned_message(&self) -> super::super::SetDot1xPortResponse {
+                self.to_owned_from_source(None)
+            }
+            #[allow(clippy::useless_conversion, clippy::needless_update)]
+            fn to_owned_from_source(
+                &self,
+                __buffa_src: ::core::option::Option<&::buffa::bytes::Bytes>,
+            ) -> super::super::SetDot1xPortResponse {
+                #[allow(unused_imports)]
+                use ::buffa::alloc::string::ToString as _;
+                let _ = __buffa_src;
+                super::super::SetDot1xPortResponse {
+                    detail: match self.detail.as_option() {
+                        Some(v) => {
+                            ::buffa::MessageField::<
+                                super::super::SwitchDetail,
+                            >::some(v.to_owned_from_source(__buffa_src))
+                        }
+                        None => ::buffa::MessageField::none(),
+                    },
+                    __buffa_unknown_fields: self
+                        .__buffa_unknown_fields
+                        .to_owned()
+                        .unwrap_or_default()
+                        .into(),
+                    ..::core::default::Default::default()
+                }
+            }
+        }
+        impl<'a> ::buffa::ViewEncode<'a> for SetDot1xPortResponseView<'a> {
+            #[allow(clippy::needless_borrow, clippy::let_and_return)]
+            fn compute_size(&self, __cache: &mut ::buffa::SizeCache) -> u32 {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                let mut size = 0u32;
+                if self.detail.is_set() {
+                    let __slot = __cache.reserve();
+                    let inner_size = self.detail.compute_size(__cache);
+                    __cache.set(__slot, inner_size);
+                    size
+                        += 1u32 + ::buffa::encoding::varint_len(inner_size as u64) as u32
+                            + inner_size;
+                }
+                size += self.__buffa_unknown_fields.encoded_len() as u32;
+                size
+            }
+            #[allow(clippy::needless_borrow)]
+            fn write_to(
+                &self,
+                __cache: &mut ::buffa::SizeCache,
+                buf: &mut impl ::buffa::bytes::BufMut,
+            ) {
+                #[allow(unused_imports)]
+                use ::buffa::Enumeration as _;
+                if self.detail.is_set() {
+                    ::buffa::encoding::Tag::new(
+                            1u32,
+                            ::buffa::encoding::WireType::LengthDelimited,
+                        )
+                        .encode(buf);
+                    ::buffa::encoding::encode_varint(__cache.consume_next() as u64, buf);
+                    self.detail.write_to(__cache, buf);
+                }
+                self.__buffa_unknown_fields.write_to(buf);
+            }
+        }
+        impl<'a> ::buffa::MessageName for SetDot1xPortResponseView<'a> {
+            const PACKAGE: &'static str = "schema.v1";
+            const NAME: &'static str = "SetDot1xPortResponse";
+            const FULL_NAME: &'static str = "schema.v1.SetDot1xPortResponse";
+            const TYPE_URL: &'static str = "type.googleapis.com/schema.v1.SetDot1xPortResponse";
+        }
+        impl<'v> ::buffa::DefaultViewInstance for SetDot1xPortResponseView<'v> {
+            fn default_view_instance<'a>() -> &'a Self
+            where
+                Self: 'a,
+            {
+                static VALUE: ::buffa::__private::OnceBox<
+                    SetDot1xPortResponseView<'static>,
+                > = ::buffa::__private::OnceBox::new();
+                VALUE
+                    .get_or_init(|| ::buffa::alloc::boxed::Box::new(
+                        <SetDot1xPortResponseView<'static>>::default(),
+                    ))
+            }
+        }
+        impl ::buffa::ViewReborrow for SetDot1xPortResponseView<'static> {
+            type Reborrowed<'b> = SetDot1xPortResponseView<'b>;
+            fn reborrow<'b>(this: &'b Self) -> &'b Self::Reborrowed<'b> {
+                this
+            }
+        }
+        /** Self-contained, `'static` owned view of a `SetDot1xPortResponse` message.
+
+ Wraps [`::buffa::OwnedView`]`<`[`SetDot1xPortResponseView`]`<'static>>`: the decoded view and the [`::buffa::bytes::Bytes`] buffer it borrows from travel together, so the handle is `'static` and `Send + Sync` — suitable for async handlers, spawned tasks, and anywhere a `'static` bound is required.
+
+ Field accessors return borrows tied to `&self`. Use [`Self::view`] to get the full [`SetDot1xPortResponseView`] when you need struct patterns, iteration helpers, or to pass the view to lifetime-parameterised code.*/
+        #[derive(Clone, Debug)]
+        pub struct SetDot1xPortResponseOwnedView(
+            ::buffa::OwnedView<SetDot1xPortResponseView<'static>>,
+        );
+        impl SetDot1xPortResponseOwnedView {
+            /// Decode an owned view from a [`::buffa::bytes::Bytes`] buffer.
+            ///
+            /// The view borrows directly from the buffer's data; the buffer is
+            /// retained inside the returned handle.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer contains invalid
+            /// protobuf data.
+            pub fn decode(
+                bytes: ::buffa::bytes::Bytes,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortResponseOwnedView(::buffa::OwnedView::decode(bytes)?),
+                )
+            }
+            /// Decode with custom [`::buffa::DecodeOptions`] (recursion limit,
+            /// max message size).
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the buffer is invalid or
+            /// exceeds the configured limits.
+            pub fn decode_with_options(
+                bytes: ::buffa::bytes::Bytes,
+                opts: &::buffa::DecodeOptions,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortResponseOwnedView(
+                        ::buffa::OwnedView::decode_with_options(bytes, opts)?,
+                    ),
+                )
+            }
+            /// Build from an owned message via an encode → decode round-trip.
+            ///
+            /// # Errors
+            ///
+            /// Returns [`::buffa::DecodeError`] if the re-encoded bytes are
+            /// somehow invalid (should not happen for well-formed messages).
+            pub fn from_owned(
+                msg: &super::super::SetDot1xPortResponse,
+            ) -> ::core::result::Result<Self, ::buffa::DecodeError> {
+                ::core::result::Result::Ok(
+                    SetDot1xPortResponseOwnedView(::buffa::OwnedView::from_owned(msg)?),
+                )
+            }
+            /// Borrow the full [`SetDot1xPortResponseView`] with its lifetime tied to `&self`.
+            #[must_use]
+            pub fn view(&self) -> &SetDot1xPortResponseView<'_> {
+                self.0.reborrow()
+            }
+            /// Convert to the owned message type.
+            #[must_use]
+            pub fn to_owned_message(&self) -> super::super::SetDot1xPortResponse {
+                self.0.to_owned_message()
+            }
+            /// The underlying bytes buffer.
+            #[must_use]
+            pub fn bytes(&self) -> &::buffa::bytes::Bytes {
+                self.0.bytes()
+            }
+            /// Consume the handle, returning the underlying bytes buffer.
+            #[must_use]
+            pub fn into_bytes(self) -> ::buffa::bytes::Bytes {
+                self.0.into_bytes()
+            }
+            /// Field 1: `detail`
+            #[must_use]
+            pub fn detail(
+                &self,
+            ) -> &::buffa::MessageFieldView<
+                super::super::__buffa::view::SwitchDetailView<'_>,
+            > {
+                &self.0.reborrow().detail
+            }
+        }
+        impl ::core::convert::From<::buffa::OwnedView<SetDot1xPortResponseView<'static>>>
+        for SetDot1xPortResponseOwnedView {
+            fn from(
+                inner: ::buffa::OwnedView<SetDot1xPortResponseView<'static>>,
+            ) -> Self {
+                SetDot1xPortResponseOwnedView(inner)
+            }
+        }
+        impl ::core::convert::From<SetDot1xPortResponseOwnedView>
+        for ::buffa::OwnedView<SetDot1xPortResponseView<'static>> {
+            fn from(wrapper: SetDot1xPortResponseOwnedView) -> Self {
+                wrapper.0
+            }
+        }
+        impl ::core::convert::AsRef<
+            ::buffa::OwnedView<SetDot1xPortResponseView<'static>>,
+        > for SetDot1xPortResponseOwnedView {
+            fn as_ref(&self) -> &::buffa::OwnedView<SetDot1xPortResponseView<'static>> {
+                &self.0
+            }
+        }
+        impl ::buffa::HasMessageView for super::super::SetDot1xPortResponse {
+            type View<'a> = SetDot1xPortResponseView<'a>;
+            type ViewHandle = SetDot1xPortResponseOwnedView;
+        }
         /// ManagedSystem is the normalized, Redfish-derived detail view of one managed
         /// entity: a Redfish ComputerSystem/Chassis for BMC/RMC-attached hosts, or the
         /// equivalent identity for a switch or router. Cairn projects Redfish resources
@@ -80627,6 +82447,14 @@ pub use self::__buffa::view::DeleteErpsRequestView;
 #[doc(inline)]
 pub use self::__buffa::view::DeleteErpsRequestOwnedView;
 #[doc(inline)]
+pub use self::__buffa::view::SetDot1xRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xRequestOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xPortRequestView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xPortRequestOwnedView;
+#[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::SetPortAdminResponseOwnedView;
@@ -80702,6 +82530,14 @@ pub use self::__buffa::view::SetErpsResponseOwnedView;
 pub use self::__buffa::view::DeleteErpsResponseView;
 #[doc(inline)]
 pub use self::__buffa::view::DeleteErpsResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xResponseOwnedView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xPortResponseView;
+#[doc(inline)]
+pub use self::__buffa::view::SetDot1xPortResponseOwnedView;
 #[doc(inline)]
 pub use self::__buffa::view::ManagedSystemView;
 #[doc(inline)]
